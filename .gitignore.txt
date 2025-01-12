@@ -1,0 +1,4 @@
+shipathon/
+__pycache__/
+*.pyc
+*.pyo

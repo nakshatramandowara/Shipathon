@@ -1,0 +1,74 @@
+[
+    {
+        "Title": "Literati 2024",
+        "date": "N/A",
+        "time": "N/A",
+        "location": "IIT Delhi",
+        "summary": "Literati 2024, IIT Delhi's annual literature and arts festival, features over 50 events, keynote speakers (Kaveree Bamzai, Bahar Dutt, Rajeev Sethi), panel discussions, competitions (quizzes, word games), workshops, and closing night performances (mushaira, theatre, slam poetry, stand-up comedy).",
+        "target_audience": "Literature and language lovers, journalism enthusiasts, media and art aficionados.",
+        "id": 13
+    },
+    {
+        "Title": "The Bidder's Alley",
+        "date": "08-01-2025",
+        "time": "N/A",
+        "location": "IIT Delhi",
+        "summary": "The Indian Game Theory Society (IGTS), IIT Delhi, hosts \"The Bidder's Alley,\" a live auction event featuring modified virtual auctions.  Top teams from online prelims advance to the final offline round.  It's a chance to test strategic skills and enjoy friendly competition.",
+        "target_audience": "Strategists, thrill-seekers, seasoned bidders, and those curious about auctions.",
+        "id": 0
+    },
+    {
+        "Title": "Literati '25 Recruitment",
+        "date": "18-10-2024",
+        "time": "N/A",
+        "location": "N/A",
+        "summary": "The Board for Student Publications (BSP), IIT Delhi, is recruiting Core Team Members (CTMs) for Literati '25 across various verticals: Marketing, Events, Competitions, Media & Production, Creative, Publicity, and Admin & Finance.  Interested individuals should fill out the provided Google Form by October 18th.",
+        "target_audience": "IIT Delhi students interested in arts, literature, and event management.",
+        "id": 14
+    },
+    {
+        "Title": "Rendezvous 2024",
+        "date": "N/A",
+        "time": "N/A",
+        "location": "IIT Delhi (various venues including Open Air Theater (OAT) and Nalanda ground)",
+        "summary": "Rendezvous 2024, a mega-cultural event at IIT Delhi, successfully concluded.  The event featured over 200 events, performances by professional artists, and activities across various venues.  The organizing team expresses gratitude for the support and participation of the IITD community.",
+        "target_audience": "IIT Delhi students, faculty, staff, alumni, sponsors, and Institute functionaries.",
+        "id": 1
+    },
+    {
+        "Title": "Tryst 2024 Day 3 Technite",
+        "date": "31-03-2024",
+        "time": "17:00",
+        "location": "Open Air Theatre (OAT), IIT Delhi",
+        "summary": "Invitation to Day 3 Technite of Tryst 2024, featuring musical performances by Karan Kanchan and Divine.  Registration is required via the Tryst website and Slick app.  Entry requires a pass and IIT Delhi RFID card.  Entry gates open at 5:00 PM and close at 6:30 PM.",
+        "target_audience": "IIT Delhi students, staff, and faculty.",
+        "id": 11
+    },
+    {
+        "Title": "Rendezvous '24: A Spirited Masquerade",
+        "date": "05-10-2024",
+        "time": "10:00",
+        "location": "IIT Delhi (Open Air Theater (OAT), Seminar Hall, LH121, Ex Hall, Dogra Hall, and other venues)",
+        "summary": "Instructions for Rendezvous '24 (October 5-8).  The event features various activities, including music, dance, drama, and workshops.  OAT events (Blitzkrieg, pronites) require passes, bookable from October 5th at 10 AM.  Details on pass booking and restrictions are provided. Children under 12 are not allowed in the OAT.",
+        "target_audience": "IIT Delhi students, faculty, and staff.",
+        "id": 9
+    },
+    {
+        "Title": "Rendezvous '24: Melange Pronite",
+        "date": "08-10-2024",
+        "time": "17:00",
+        "location": "Open Air Theater (OAT) and Nalanda Ground, IIT Delhi",
+        "summary": "Guidelines for Day 3 evening program of Rendezvous '24.  Melange pronite (Salim Sulaiman) at OAT requires a valid pass and original IITD ID card.  Alternative musical performances at Nalanda Ground with entry via original IITD ID card. Entry to both venues may be restricted once capacity is reached.",
+        "target_audience": "IIT Delhi students, faculty, staff, and their families (with restrictions).",
+        "id": 2
+    },
+    {
+        "Title": "N/A",
+        "date": "06-10-2024",
+        "time": "N/A",
+        "location": "N/A",
+        "summary": "N/A",
+        "target_audience": "N/A",
+        "id": 7
+    }
+]
