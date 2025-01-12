@@ -102,12 +102,13 @@ def get_user_preferences(user_data,
   '''
   dumps results in search_results.json
   '''
+  print(user_data)
   weighted_text = (
       f"{(user_data['name'] + ' ') * int(name_weight)}" +
       f"{(user_data['gender'] + ' ') * int(gender_weight)}" +
       f"{(user_data['role'] + ' ') * int(role_weight)}" +
       f"{(user_data['department'] + ' ') * int(department_weight)}" +
-      f"{(str(user_data['year']) + 'st year' + ' ') * int(year_weight)}" +
+      f"{(str(user_data['year']) + ' ') * int(year_weight)}" +
       f"{(' '.join(user_data['interests']) + ' ') * int(interests_weight)}"  +
       f"{(' '.join(user_data['past_events']) + ' ') * int(past_events_weight)}"
   )
@@ -144,7 +145,7 @@ def get_user_preferences(user_data,
   return resulting_data
 
 def main():
-  # Load events from JSON file
+  Load events from JSON file
   events_file = script_dir/r'events.json'
   print(events_file)
   with open(events_file, 'r') as f:
@@ -161,7 +162,7 @@ def main():
   user_data_file = script_dir/r'user_data.json'
   with open(user_data_file, 'r') as f:
     user_data = json.load(f)
-  get_user_preferences(user_data)
+  # get_user_preferences(user_data)
 
 if __name__ == '__main__':
   main()
