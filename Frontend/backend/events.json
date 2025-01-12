@@ -8,19 +8,27 @@
         "target_audience": "Strategists, thrill-seekers, seasoned bidders, and those curious about auctions."
     },
     {
+        "Title": "Rendezvous 2024",
+        "date": "N/A",
+        "time": "N/A",
+        "location": "IIT Delhi (various venues including Open Air Theater (OAT) and Nalanda ground)",
+        "summary": "Rendezvous 2024, a mega-cultural event at IIT Delhi, successfully concluded.  The event featured over 200 events, performances by professional artists, and activities across various venues.  The organizing team expresses gratitude for the support and participation of the IITD community.",
+        "target_audience": "IIT Delhi students, faculty, staff, alumni, sponsors, and Institute functionaries."
+    },
+    {
         "Title": "Rendezvous '24: Melange Pronite",
         "date": "08-10-2024",
         "time": "17:00",
         "location": "Open Air Theater (OAT) and Nalanda Ground, IIT Delhi",
-        "summary": "Guidelines for Day 3 evening program of Rendezvous '24.  Melange (Salim Sulaiman performance) at OAT requires a valid pass and original IITD ID card.  Alternative musical performances at Nalanda Ground require only a valid original IITD ID card. Entry to both venues may be restricted once capacity is reached.",
+        "summary": "Guidelines for Day 3 evening program of Rendezvous '24.  Melange pronite (Salim Sulaiman) at OAT requires a valid pass and original IITD ID card.  Alternative musical performances at Nalanda Ground with entry via original IITD ID card. Entry to both venues may be restricted once capacity is reached.",
         "target_audience": "IIT Delhi students, faculty, staff, and their families (with restrictions)."
     },
     {
         "Title": "Rendezvous '24: Day 3 - A Spirited Masquerade",
         "date": "08-10-2024",
-        "time": "17:00",
-        "location": "Open Air Theater (OAT) and Nalanda Ground, IIT Delhi",
-        "summary": "Instructions for Day 3 of Rendezvous '24 (October 8th).  Melange pronite passes available 11:00-13:00 via website registration.  OAT entry requires a valid pass and original IITD ID.  Nalanda Ground offers alternative musical performances with valid IITD ID.  Children under 12 not allowed in OAT.",
+        "time": "11:00",
+        "location": "IIT Delhi (Open Air Theater (OAT) and Nalanda Ground)",
+        "summary": "Instructions for Day 3 of Rendezvous '24.  Melange pronite passes bookable from 11:00 AM to 1:00 PM via the website.  Entry to OAT requires a valid pass and original IITD ID card.  Alternative events at Nalanda Ground with entry via original IITD ID card.  Children under 12 not allowed in OAT.",
         "target_audience": "IIT Delhi students, faculty, and permanent staff."
     },
     {
@@ -28,15 +36,15 @@
         "date": "07-10-2024",
         "time": "17:00",
         "location": "Open Air Theater (OAT) and Nalanda Ground, IIT Delhi",
-        "summary": "Guidelines for Rendezvous '24 Day 2 evening program.  Dhoom pronite (Mithoon) at OAT requires a valid pass and original IITD ID card.  Alternative musical performances at Nalanda Ground (starting 20:00) require only a valid original IITD ID card. Entry to both venues may be restricted once capacity is reached.",
+        "summary": "Guidelines for Day 2 evening program of Rendezvous '24. Dhoom pronite (Mithoon) at OAT requires a valid pass and original IITD ID card. Alternative musical performances at Nalanda Ground with entry via original IITD ID card. Entry to both venues may be restricted once capacity is reached.",
         "target_audience": "IIT Delhi students, faculty, staff, and their families (with restrictions)."
     },
     {
         "Title": "Rendezvous '24: Day 2 - A Spirited Masquerade",
         "date": "07-10-2024",
-        "time": "17:00",
-        "location": "Open Air Theater (OAT) and Nalanda Ground, IIT Delhi",
-        "summary": "Instructions for Day 2 of Rendezvous '24 (October 7th). Dhoom pronite passes bookable 11:00-13:00 via website registration. OAT entry requires a valid pass and original IITD ID. Nalanda Ground offers alternative musical performances (starting 20:00) with valid IITD ID. Children under 12 not allowed in OAT.",
+        "time": "11:00",
+        "location": "IIT Delhi (Open Air Theater (OAT) and Nalanda Ground)",
+        "summary": "Instructions for Day 2 of Rendezvous '24. Dhoom pronite passes bookable from 11:00 AM to 1:00 PM via the website. Entry to OAT requires a valid pass and original IITD ID card. Alternative events at Nalanda Ground with entry via original IITD ID card. Children under 12 not allowed in OAT.",
         "target_audience": "IIT Delhi students, faculty, and permanent staff."
     },
     {
@@ -44,31 +52,47 @@
         "date": "06-10-2024",
         "time": "17:00",
         "location": "Open Air Theater (OAT) and Nalanda Ground, IIT Delhi",
-        "summary": "Instructions for Rendezvous '24 Day 1 evening program. Kaleidoscope pronite (Asees Kaur) at OAT requires a valid pass and original IITD ID card.  Alternative events at Nalanda Ground (band, dance finals, Lost Stories DJ set) require only a valid original IITD ID card. Entry to both venues may be restricted once capacity is reached.",
+        "summary": "Instructions for Day 1 evening program of Rendezvous '24. Kaleidoscope pronite (Asees Kaur) at OAT requires a valid pass and original IITD ID card.  Alternative events at Nalanda Ground (band, dance finals, DJ) with entry via original IITD ID card. Entry to both venues may be restricted once capacity is reached.",
         "target_audience": "IIT Delhi students, faculty, staff, and their families (with restrictions)."
+    },
+    {
+        "Title": "N/A",
+        "date": "06-10-2024",
+        "time": "N/A",
+        "location": "N/A",
+        "summary": "N/A",
+        "target_audience": "N/A"
     },
     {
         "Title": "Rendezvous '24 Pronite Pass Booking",
         "date": "05-10-2024",
         "time": "10:00",
         "location": "Open Air Theater (OAT) and Nalanda Grounds, IIT Delhi",
-        "summary": "Announcing the artist lineup and pass booking schedule for Rendezvous '24 pronites (Oct 5-8).  Booking opens October 5th at 10:00 AM via website registration.  OAT entry requires a valid pass and IITD ID;  Nalanda Grounds offers alternative events with IITD ID.  Security protocols and restrictions are detailed.",
+        "summary": "Announcing the artist lineup and pass booking schedule for Rendezvous '24 pronites (Oct 5-8).  Pass booking opens October 5th at 10 AM via the website.  Details on entry requirements, security protocols, and alternative events at Nalanda Grounds are included.",
+        "target_audience": "IIT Delhi students, faculty, and staff."
+    },
+    {
+        "Title": "Rendezvous '24: A Spirited Masquerade",
+        "date": "05-10-2024",
+        "time": "10:00",
+        "location": "IIT Delhi (Open Air Theater (OAT), Seminar Hall, LH121, Ex Hall, Dogra Hall, and other venues)",
+        "summary": "Instructions for Rendezvous '24 (October 5-8).  The event features various activities, including music, dance, drama, and workshops.  OAT events (Blitzkrieg, pronites) require passes, bookable from October 5th at 10 AM.  Details on pass booking and restrictions are provided. Children under 12 are not allowed in the OAT.",
         "target_audience": "IIT Delhi students, faculty, and staff."
     },
     {
         "Title": "Rendezvous '24: A Spirited Masquerade",
         "date": "05-10-2024",
         "time": "N/A",
-        "location": "IIT Delhi (various venues including Open Air Theater (OAT), Dogra Hall, LH121, Seminar Hall, Ex Hall, Nalanda Grounds)",
-        "summary": "Invitation to Rendezvous '24 (October 5-8), a cultural extravaganza at IIT Delhi featuring diverse activities, performances, and discussions.  OAT events (Blitzkrieg, pronites) require passes; booking details forthcoming.  Other events are listed; children under 12 not allowed in OAT.",
-        "target_audience": "IIT Delhi community and guests."
+        "location": "IIT Delhi (LHC, Open Air Theater (OAT), Dogra Hall, Seminar Hall, Nalanda Ground)",
+        "summary": "Announcing Rendezvous '24 (October 5-8), a cultural extravaganza at IIT Delhi.  Day 1 events include quizzes, debates, creative activities, and a talk show.  Pronite passes are available for booking via the Rendezvous website.  Instructions for website registration are provided.",
+        "target_audience": "IIT Delhi community (students, faculty, staff)."
     },
     {
         "Title": "Tryst 2024 Day 3 Technite",
         "date": "31-03-2024",
         "time": "17:00",
         "location": "Open Air Theatre (OAT), IIT Delhi",
-        "summary": "Invitation to Day 3 Technite of Tryst 2024, featuring musical performances by Karan Kanchan and Divine.  Registration is required via the Tryst website and Slick app; passes are limited and available in half-hour slots from 11:30 AM to 2 PM.  Entry requires a pass and IIT Delhi RFID card; separate entry gates for males and females.",
+        "summary": "Invitation to Day 3 Technite of Tryst 2024, featuring musical performances by Karan Kanchan and Divine.  Registration is required via the Tryst website and Slick app.  Entry requires a pass and IIT Delhi RFID card.  Entry gates open at 5:00 PM and close at 6:30 PM.",
         "target_audience": "IIT Delhi students, staff, and faculty."
     },
     {
@@ -76,119 +100,23 @@
         "date": "30-03-2024",
         "time": "17:00",
         "location": "Open Air Theatre (OAT), IIT Delhi",
-        "summary": "Invitation to Day 2 Technite of Tryst 2024, featuring stand-up comedian Samay Raina and DJ Ravator. Registration is required via the Tryst website and Slick app; passes are limited and available in half-hour slots from 8 AM to 12 PM. Entry begins at 5:00 PM and closes at 6:30 PM.",
+        "summary": "Invitation to Day 2 Technite of Tryst 2024, featuring stand-up comedian Samay Raina and DJ Ravator. Registration is required via the Tryst website and Slick app. Pass booking opens at 8:00 AM. Entry requires a pass and likely an IIT Delhi ID card. Entry gates open at 5:00 PM and close at 6:30 PM.",
         "target_audience": "IIT Delhi students, staff, and faculty."
     },
     {
         "Title": "Literati 2024",
         "date": "N/A",
         "time": "N/A",
-        "location": "IIT Delhi (various venues)",
-        "summary": "Invitation to Literati 2024, a literature and arts festival at IIT Delhi.  The festival features keynote speakers (Kaveree Bamzai, Bahar Dutt, Rajeev Sethi), panel discussions, competitions (quizzes, word games, design), workshops, and closing night events (mushaira, theatre, slam poetry, stand-up comedy).",
+        "location": "IIT Delhi",
+        "summary": "Literati 2024, IIT Delhi's annual literature and arts festival, features over 50 events, keynote speakers (Kaveree Bamzai, Bahar Dutt, Rajeev Sethi), panel discussions, competitions (quizzes, word games), workshops, and closing night performances (mushaira, theatre, slam poetry, stand-up comedy).",
         "target_audience": "Literature and language lovers, journalism enthusiasts, media and art aficionados."
     },
     {
         "Title": "Literati '25 Recruitment",
-        "date": "N/A",
+        "date": "18-10-2024",
         "time": "N/A",
         "location": "N/A",
-        "summary": "The Board for Student Publications (BSP) is recruiting Core Team Members (CTMs) for Literati '25, IIT Delhi's art and literature fest.  Applications are open for various verticals (Marketing, Events, Competitions, Media & Production, Creative, Publicity, Admin & Finance).  The application deadline is October 18th.",
+        "summary": "The Board for Student Publications (BSP), IIT Delhi, is recruiting Core Team Members (CTMs) for Literati '25 across various verticals: Marketing, Events, Competitions, Media & Production, Creative, Publicity, and Admin & Finance.  Interested individuals should fill out the provided Google Form by October 18th.",
         "target_audience": "IIT Delhi students interested in arts, literature, and event management."
-    },
-    {
-        "Title": "Literati 2024 Closing Night Ceremony",
-        "date": "N/A",
-        "time": "18:00",
-        "location": "Dogra Hall, IIT Delhi",
-        "summary": "Closing night events for Literati 2024 at Dogra Hall.  The program includes an annual lecture by Rajeev Sethi (6 PM) and a stand-up comedy act by Rahul Dua with an opening act by Delhi Slam Poetry (7 PM). Entry is first-come, first-served, with specific entry points for male and female students and faculty/staff.  IIT Delhi ID cards are required; bags and water bottles are prohibited; recording is not allowed.",
-        "target_audience": "IIT Delhi students, faculty, and staff."
-    },
-    {
-        "Title": "KSBS Departmental Talks",
-        "date": "13-01-2025",
-        "time": "10:30",
-        "location": "Seminar Room (DBEB, 2nd Floor) and Committee room (DBEB, 2nd Floor), IIT Delhi",
-        "summary": "Two KSBS departmental talks are scheduled for January 2025.  Prof. Shashank Tripathi (IISc) will present \"Host-Directed Antivirals\" on January 13th at 10:30 AM in the Seminar Room. Dr. Ankit Sabharwal (University of Texas at Austin) will present \"Fishing for Cures\" on January 20th at 3:00 PM in the Committee Room.  Abstracts are available via the provided link.",
-        "target_audience": "Kusuma School of Biological Sciences (KSBS) faculty, staff, and students."
-    },
-    {
-        "Title": "Civil Engineering Seminar: Professor Prashant Kumar",
-        "date": "23-12-2024",
-        "time": "10:30",
-        "location": "Committee Room (Block IV; Room No. 221), Department of Civil Engineering, IIT Delhi",
-        "summary": "A Civil Engineering seminar by Professor Prashant Kumar (University of Surrey) on \"Unlocking the Potential of Nature-Based Solutions for Air Pollution and Climate Mitigation.\"  The seminar will explore the disparity in air quality, present findings from GCARE projects, and discuss nature-based solutions and policy changes. Professor Kumar's extensive research and awards are highlighted.",
-        "target_audience": "IIT Delhi Civil Engineering Department faculty, staff, students, and interested individuals."
-    },
-    {
-        "Title": "Khelculus: Mathematics Department Sports Event",
-        "date": "07-04-2024",
-        "time": "N/A",
-        "location": "Mittal sports complex, IIT Delhi",
-        "summary": "The Mathematics Society invites you to Khelculus, a sports event featuring cricket, basketball, volleyball, football (subject to registration), table tennis, carom, chess, Jenga, and other fun games.  Registration is required via the provided links before April 6th.",
-        "target_audience": "IIT Delhi Mathematics Department students and colleagues."
-    },
-    {
-        "Title": "Sportech'25 CTM Recruitment",
-        "date": "N/A",
-        "time": "N/A",
-        "location": "N/A",
-        "summary": "Recruitment for Core Team Members (CTMs) of Sportech'25, IIT Delhi's annual sports fest, is open.  Interested students (UG 2022 entry and prior; PG 2nd year and onwards) can apply via the provided form by January 7th, 2024.  CTMs will lead teams and coordinate event processes.",
-        "target_audience": "Eligible IIT Delhi students interested in sports event management."
-    },
-    {
-        "Title": "Code-Decode Programming Competition",
-        "date": "19-10-2024",
-        "time": "18:00",
-        "location": "LH108, IIT Delhi",
-        "summary": "Code-Decode is a unique programming competition challenging participants to reverse-engineer algorithms from given inputs and outputs.  The competition offers Rs. 5000 in prizes.  Registration is via the provided link; the rulebook is also available.",
-        "target_audience": "IIT Delhi students interested in programming and problem-solving."
-    },
-    {
-        "Title": "Physics and Astronomy Reading Circle",
-        "date": "19-10-2024",
-        "time": "18:00",
-        "location": "WS101 (Design Dept.), IIT Delhi",
-        "summary": "The Physics and Astronomy Club invites you to a weekly reading circle on Introduction to Astrophysics.  The event is open to all students and provides a platform for in-depth discussions.  Topics are decided during the session, and anyone can volunteer as a presenter. A WhatsApp group link is provided.",
-        "target_audience": "IIT Delhi students interested in physics and astronomy."
-    },
-    {
-        "Title": "Castillo Cuantico: AI/ML in Quantitative Finance",
-        "date": "20-10-2024",
-        "time": "12:45",
-        "location": "LH121, IIT Delhi",
-        "summary": "Castillo Cuantico, an offline session and competition on AI/ML in Quantitative Finance, is organized by Citadel Securities and ARIES, IIT Delhi.  The event includes a talk, trading/market-making competition, and a data challenge.  Prizes and goodies are offered.  Registration is required; IITD students only.",
-        "target_audience": "IIT Delhi students interested in AI/ML, quantitative finance, and trading."
-    },
-    {
-        "Title": "Piramal Finance ML Hackathon",
-        "date": "16-10-2024",
-        "time": "17:30",
-        "location": "Lecture Hall Complex, IIT Delhi",
-        "summary": "Piramal Finance is hosting an ML hackathon exclusively for IIT Delhi students.  Whether you're an experienced coder or a beginner, this is a chance to participate in a challenging and rewarding event. Registration is via the provided link.",
-        "target_audience": "IIT Delhi undergraduate and postgraduate students."
-    },
-    {
-        "Title": "Robocon Hackathon: Robot Basketball",
-        "date": "25-12-2024",
-        "time": "N/A",
-        "location": "N/A",
-        "summary": "The Robotics Club, IIT Delhi, invites you to a Robot Basketball Hackathon inspired by the ABU Robocon 2025 theme.  Participants design and submit a CAD model of a robot, along with a design explanation document.  Teams of up to three are allowed.  Prizes include a 15K prize pool and wildcard entry to Team Robocon IITD for the top two teams.  The submission deadline is December 25th, 2024.",
-        "target_audience": "IIT Delhi students interested in robotics."
-    },
-    {
-        "Title": "By The Chai - A Lohri Open Mic",
-        "date": "12-01-2025",
-        "time": "17:00",
-        "location": "Red Square Area (Near Central Library), IIT Delhi",
-        "summary": "An open mic event featuring musical performances and poetry, organized by Music Club, Literary Club, Hindi Samiti, and Literati. The event will take place on January 12th from 5 PM to 10 PM in the Red Square Area.  Registration is required via the provided Google Form link by January 11th.",
-        "target_audience": "IIT Delhi students and community members interested in music, poetry, and literature."
-    },
-    {
-        "Title": "Chhath Puja Celebration",
-        "date": "06-11-2024",
-        "time": "19:00",
-        "location": "Kalyan Mandapam, IIT Delhi",
-        "summary": "Invitation to the Chhath Puja celebration at Kalyan Mandapam, IIT Delhi.  The event includes Kharna Prasad (November 6th, 7:00 PM), evening Arghya (November 7th, sunset), morning Arghya (November 8th, sunrise), and Prasad distribution (November 8th, 7-8 AM).  Contact information for volunteers is provided.",
-        "target_audience": "IIT Delhi community and families."
-    },
+    }
 ]
