@@ -102,7 +102,7 @@ def get_user_preferences(user_data,
   '''
   dumps results in search_results.json
   '''
-  print(user_data)
+  
   weighted_text = (
       f"{(user_data['name'] + ' ') * int(name_weight)}" +
       f"{(user_data['gender'] + ' ') * int(gender_weight)}" +
@@ -162,7 +162,7 @@ def main():
   user_data_file = script_dir/r'user_data.json'
   with open(user_data_file, 'r') as f:
     user_data = json.load(f)
-  # get_user_preferences(user_data)
+  get_user_preferences(user_data)
 
 if __name__ == '__main__':
   main()
