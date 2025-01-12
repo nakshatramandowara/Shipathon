@@ -10,7 +10,7 @@ from backend import event_recommender as er
 script_dir = Path(__file__).parent
 EVENTS_PATH = script_dir/"events.json"
 
-@st.cache_data
+
 def start():
     er.initialize_collection("my_events")
 
