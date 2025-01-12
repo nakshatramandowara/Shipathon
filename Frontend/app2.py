@@ -13,12 +13,12 @@ EVENTS_PATH = script_dir/"events.json"
 def start():
     er.ensure_initialization("my_events")
 
-    with open(EVENTS_PATH, 'r') as f:
-        documents = json.load(f)
+    # with open(EVENTS_PATH, 'r') as f:
+    #     documents = json.load(f)
 
-    for idx, doc in enumerate(documents):
-        doc["id"] = idx  
-        result = er.add_event_to_database(doc)
+    # for idx, doc in enumerate(documents):
+    #     doc["id"] = idx  
+    #     result = er.add_event_to_database(doc)
 
 start()
 
