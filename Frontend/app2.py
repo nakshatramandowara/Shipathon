@@ -33,6 +33,116 @@ if 'username' not in st.session_state:
 USER_DB_PATH = script_dir/"user_db.json"
 USER_PREFS_PATH = script_dir/"user_preferences.json"
 
+
+def create_upload_page():
+    """Create the event upload page."""
+    st.title("Upload New Event")
+    
+    with st.form("event_upload_form"):
+        st.subheader("Event Details")
+        
+        # Basic Information
+        title = st.text_input("Event Title*", help="Enter the name of the event")
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            date = st.date_input(
+                "Event Date*",
+                min_value=datetime.now().date(),
+                help="Select the event date or application deadline"
+            )
+        with col2:
+            event_time = st.time_input(
+                "Event Time*",
+                value=None,
+                help="Select the event start time"
+            )
+        
+        # Event Type and Target Audience
+        col3, col4 = st.columns(2)
+        with col3:
+            types = ['recruitment', 'cultural','technical']
+            event_type = st.selectbox(
+                "Type*",
+                options=types,
+                help="Select whether this is an event or recruitment posting"
+            )
+        with col4:
+            target_audience = st.text_input("Target_Audience*")
+        
+        # Location
+        location = st.text_input(
+            "Location*",
+            help="Enter the event location or specify if it's virtual"
+        )
+        
+        # Description
+        description = st.text_area(
+            "Description*",
+            help="Provide a detailed description of the event",
+            height=150
+        )
+        
+        # Additional Details based on event type
+        if event_type == 'Recruitment':
+            company = st.text_input("Company Name*")
+            position = st.text_input("Position*")
+            requirements = st.text_area("Requirements*", height=100)
+        
+        submitted = st.form_submit_button("Upload Event")
+        
+        if submitted:
+            # Validate required fields
+            required_fields = {
+                'title': title,
+                'date': date,
+                'time': event_time,
+                'location': location,
+                'description': description,
+                'target_audience': target_audience
+            }
+            
+            if event_type == 'Recruitment':
+                required_fields.update({
+                    'company': company,
+                    'position': position,
+                    'requirements': requirements
+                })
+            
+            # Check if any required field is empty
+            missing_fields = [field for field, value in required_fields.items() 
+                            if not value]
+            
+            if missing_fields:
+                st.error(f"Please fill in all required fields: {', '.join(missing_fields)}")
+            else:
+                # Create event data dictionary
+                event_data = {
+                    'title': title,
+                    'date': date.isoformat(),
+                    'time': event_time.strftime('%H:%M'),
+                    'type': event_type,
+                    'location': location,
+                    'description': description,
+                    'target_audience': target_audience,
+                }
+                
+                # Add recruitment-specific fields if applicable
+                if event_type == 'Recruitment':
+                    event_data.update({
+                        'company': company,
+                        'position': position,
+                        'requirements': requirements
+                    })
+                
+                # Save the event
+                try:
+                    er.add_event_to_database(event_data)
+                    st.success("Event uploaded successfully!")
+                    # Clear form (by forcing a rerun)
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"Error saving event: {str(e)}")
 # Initialize storage files if they don't exist
 
 
@@ -246,7 +356,7 @@ def main():
 
     # Page routing
     if st.session_state.current_page == 'upload' :
-        pass
+        create_upload_page()
         
     else:
         # [Previous main page code remains the same...]
