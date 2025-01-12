@@ -281,10 +281,10 @@ def main():
         new_username = st.text_input("Choose Username", key="reg_username")
         new_password = st.text_input("Choose Password", type="password", key="reg_password")
         
-        roles = ['Organiser','Student','Professor']
-        categories = ['Technology', 'Entertainment', 'Sports', 'Business', 'Arts']
+        roles = ['Organiser','Student','Faculty']
+        categories = ['Technology', 'Entertainment', 'Sports', 'Business', 'Cultural']
         gender = ["male","female"]
-        departments = ["physics","maths","electrical"]
+        departments = ["Physics","Mathematics","Electrical"]
 
 
         role = st.selectbox("Choose Role", options = roles)
@@ -323,7 +323,7 @@ def main():
                 key="date_filter"
             )
             
-            event_types = ['All', 'Conference', 'Festival', 'Workshop']
+            event_types = ['All', 'Conference', 'Festival', 'Workshop','Competition']
             selected_type = st.selectbox("Event Type", event_types)
             
         # Apply filters
