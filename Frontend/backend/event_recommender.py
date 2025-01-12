@@ -31,35 +31,32 @@ def ensure_initialization():
         
         # Load and add events
         events_file = script_dir/"events.json"
-        try:
-            with open(events_file, 'r') as f:
-                documents = json.load(f)
+    
+        with open(events_file, 'r') as f:
+            documents = json.load(f)
+        
+        # Create points list for batch upload
+        points = []
+        for idx, doc in enumerate(documents):
+            values_string = f"{doc['Title']} {doc['location']} {doc['summary']} {doc['target_audience']}"
+            vector = encoder.encode(values_string).tolist()
             
-            # Create points list for batch upload
-            points = []
-            for idx, doc in enumerate(documents):
-                values_string = f"{doc['Title']} {doc['location']} {doc['summary']} {doc['target_audience']}"
-                vector = encoder.encode(values_string).tolist()
-                
-                points.append(models.PointStruct(
-                    id=idx,
-                    vector=vector,
-                    payload=doc
-                ))
+            points.append(models.PointStruct(
+                id=idx,
+                vector=vector,
+                payload=doc
+            ))
+        
+        # Batch upload all points
+        client.upload_points(
+            collection_name="my_events",
+            points=points
+        )
+        
+        _is_initialized = True
+        print(f"Initialized with {len(points)} events")
             
-            # Batch upload all points
-            client.upload_points(
-                collection_name="my_events",
-                points=points
-            )
-            
-            _is_initialized = True
-            print(f"Initialized with {len(points)} events")
-            
-        except FileNotFoundError:
-            raise Exception("Events file not found. Please ensure events.json exists in the correct directory.")
-        except json.JSONDecodeError:
-            raise Exception("Invalid JSON format in events.json")
+       
 
 def get_user_preferences(user_data,
     name_weight = 0,
