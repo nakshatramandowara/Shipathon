@@ -14,14 +14,8 @@ EVENTS_PATH = script_dir/"events.json"
 def start():
     er.initialize_collection("my_events")
 
-    with open(EVENTS_PATH, "r", encoding="utf-8") as f:
-        try:
-            documents = json.load(f)
-            print(documents)
-        except json.JSONDecodeError as e:
-            print("JSON decoding failed:", e)
-
-
+    with open(EVENTS_PATH, 'r') as f:
+        documents = json.load(f)
 
     for idx, doc in enumerate(documents):
         doc["id"] = idx  
