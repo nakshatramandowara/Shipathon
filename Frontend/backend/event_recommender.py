@@ -145,7 +145,7 @@ def get_user_preferences(user_data,
   return resulting_data
 
 def main():
-  Load events from JSON file
+  # Load events from JSON file
   events_file = script_dir/r'events.json'
   print(events_file)
   with open(events_file, 'r') as f:
