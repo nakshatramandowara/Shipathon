@@ -117,10 +117,12 @@ def display_events_as_list(events):
 
 # Ranked interest selection
 def select_ranked_preferences(categories):
+def select_ranked_preferences(categories):
     st.subheader("Rank Your Interests")
-    st.write("Rank the categories based on your interests. Drag the most important ones to the top.")
+    st.write("Rank the categories based on your interests. Drag the most important ones to the top. You can leave some ranks as 'None' if not interested in those categories.")
 
     ranked_preferences = []
+    none_count = 0
     with st.form("ranked_preferences"):
         for i, category in enumerate(categories, start=1):
             selected = st.selectbox(
@@ -128,15 +130,18 @@ def select_ranked_preferences(categories):
                 options=["None"] + categories,
                 key=f"rank_{i}",
             )
-            if selected != "None" and selected not in ranked_preferences:
+            # Allow multiple "None" and ignore it for rankings
+            if selected == "None":
+                none_count += 1
+            elif selected not in ranked_preferences:
                 ranked_preferences.append(selected)
 
         submitted = st.form_submit_button("Submit Rankings")
         if submitted:
-            if len(ranked_preferences) != len(categories):
-                st.warning("Please rank all categories uniquely.")
+            if len(ranked_preferences) + none_count != len(categories):
+                st.warning("Please rank all categories uniquely, or leave them as 'None'.")
             else:
-                return ranked_preferences
+                return ranked_preferences  # Only return valid preferences
     return None
 
 
