@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import json
@@ -62,7 +63,7 @@ def create_upload_page():
         # Event Type and Target Audience
         col3, col4 = st.columns(2)
         with col3:
-            types = ['recruitment', 'cultural','technical','sports','academic']
+            types = ['recruitment', 'cultural','technical']
             event_type = st.selectbox(
                 "Type*",
                 options=types,
@@ -280,17 +281,17 @@ def main():
         new_username = st.text_input("Choose Username", key="reg_username")
         new_password = st.text_input("Choose Password", type="password", key="reg_password")
         
-        roles = ['Organiser','Student','Faculty']
-        categories = ['Technology', 'Academic', 'Sports', 'Business', 'Cultural']
+        roles = ['Organiser','Student','Professor']
+        categories = ['Technology', 'Entertainment', 'Sports', 'Business', 'Arts']
         gender = ["male","female"]
-        departments = ["Physics","Mathematics","Electrical","Computer Science","Chemical","Mechanical","Textile"]
+        departments = ["physics","maths","electrical"]
 
 
         role = st.selectbox("Choose Role", options = roles)
         if(role == 'Student'):
             new_department = st.selectbox("Choose department",options = departments)
-            new_age = st.number_input('Enter Age', min_value=1, max_value=100, value=20, step=1,key="reg_age")
-            new_year = st.number_input("Enter your degree-year",min_value=1,max_value=10,value=2,step=1,key = "reg_year")
+            new_age = st.number_input("Enter Age",key = "reg_age")
+            new_year = st.number_input("Enter your degree-year",key = "reg_year")
             new_gender = st.selectbox("choose gender",options = gender)
 
 
@@ -322,7 +323,7 @@ def main():
                 key="date_filter"
             )
             
-            event_types = ['All', 'Conference', 'Festival', 'Workshop',"Competition"]
+            event_types = ['All', 'Conference', 'Festival', 'Workshop']
             selected_type = st.selectbox("Event Type", event_types)
             
         # Apply filters
