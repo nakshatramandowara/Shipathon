@@ -281,10 +281,10 @@ def main():
         new_username = st.text_input("Choose Username", key="reg_username")
         new_password = st.text_input("Choose Password", type="password", key="reg_password")
         
-        roles = ['Organiser','Student','Professor']
+        roles = ['Organiser','Student','professor']
         categories = ['Technology', 'Entertainment', 'Sports', 'Business', 'Arts']
         gender = ["male","female"]
-        departments = ["Physics","Mathematics","Electrical"]
+        departments = ["physics","maths","electrical"]
 
 
         role = st.selectbox("Choose Role", options = roles)
