@@ -15,9 +15,12 @@ def start():
     er.initialize_collection("my_events")
 
     with open(EVENTS_PATH, "r", encoding="utf-8") as f:
-        raw_content = f.read()
-        print(raw_content)
-        documents = json.loads(raw_content)
+    try:
+        documents = json.load(f)
+        print(documents)
+    except json.JSONDecodeError as e:
+        print("JSON decoding failed:", e)
+
 
 
     for idx, doc in enumerate(documents):
