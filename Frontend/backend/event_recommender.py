@@ -10,7 +10,7 @@ encoder = SentenceTransformer("all-MiniLM-L6-v2")
 client = QdrantClient(":memory:")
 _is_initialized = False
 
-def ensure_initialization():
+def ensure_initialization(name):
     """
     Ensures the collection is initialized and populated with events.
     Uses a global flag to prevent multiple initializations.
@@ -20,9 +20,9 @@ def ensure_initialization():
     if not _is_initialized:
         # Initialize collection
         collections = client.get_collections().collections
-        if "my_events" not in [col.name for col in collections]:
+        if name not in [col.name for col in collections]:
             client.create_collection(
-                collection_name="my_events",
+                collection_name=name,
                 vectors_config=models.VectorParams(
                     size=encoder.get_sentence_embedding_dimension(),
                     distance=models.Distance.COSINE,
@@ -50,7 +50,7 @@ def ensure_initialization():
         
         # Batch upload all points
         client.upload_points(
-            collection_name="my_events",
+            collection_name=name,
             points=points
         )
         
