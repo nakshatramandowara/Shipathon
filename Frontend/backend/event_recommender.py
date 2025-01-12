@@ -1,6 +1,3 @@
-# !pip install -U sentence-transformers
-# !pip install -U qdrant-client
-
 from pathlib import Path
 script_dir = Path(__file__).parent
 
@@ -11,7 +8,6 @@ import json
 # Global variables
 encoder = SentenceTransformer("all-MiniLM-L6-v2")
 client = QdrantClient(":memory:")
-SIMILARITY_THRESHOLD = 0.835
 _is_initialized = False
 
 def ensure_initialization():
@@ -23,7 +19,15 @@ def ensure_initialization():
     
     if not _is_initialized:
         # Initialize collection
-        initialize_collection("my_events")
+        collections = client.get_collections().collections
+        if "my_events" not in [col.name for col in collections]:
+            client.create_collection(
+                collection_name="my_events",
+                vectors_config=models.VectorParams(
+                    size=encoder.get_sentence_embedding_dimension(),
+                    distance=models.Distance.COSINE,
+                ),
+            )
         
         # Load and add events
         events_file = script_dir/"events.json"
@@ -31,54 +35,31 @@ def ensure_initialization():
             with open(events_file, 'r') as f:
                 documents = json.load(f)
             
+            # Create points list for batch upload
+            points = []
             for idx, doc in enumerate(documents):
-                doc["id"] = idx
-                add_event_to_database(doc)
+                values_string = f"{doc['Title']} {doc['location']} {doc['summary']} {doc['target_audience']}"
+                vector = encoder.encode(values_string).tolist()
+                
+                points.append(models.PointStruct(
+                    id=idx,
+                    vector=vector,
+                    payload=doc
+                ))
+            
+            # Batch upload all points
+            client.upload_points(
+                collection_name="my_events",
+                points=points
+            )
             
             _is_initialized = True
+            print(f"Initialized with {len(points)} events")
+            
         except FileNotFoundError:
             raise Exception("Events file not found. Please ensure events.json exists in the correct directory.")
         except json.JSONDecodeError:
             raise Exception("Invalid JSON format in events.json")
-
-def initialize_collection(collection_name):
-    """
-    Initializes a Qdrant collection if it does not already exist.
-    """
-    collections = client.get_collections().collections
-    existing_collections = [col.name for col in collections]
-    
-    if collection_name not in existing_collections:
-        client.create_collection(
-            collection_name=collection_name,
-            vectors_config=models.VectorParams(
-                size=encoder.get_sentence_embedding_dimension(),
-                distance=models.Distance.COSINE,
-            ),
-        )
-
-def is_similar_event(client, collection_name, new_vector, threshold=SIMILARITY_THRESHOLD):
-    search_results = client.search(
-        collection_name=collection_name,
-        query_vector=new_vector,
-        limit=1,
-    )
-    if len(search_results) > 0:
-        print(f"Similarity score: {search_results[0].score}")
-    return len(search_results) > 0 and search_results[0].score > threshold
-
-def add_event_to_database(doc, collection_name="my_events", threshold=SIMILARITY_THRESHOLD):
-    values_string = f"{doc['Title']} {doc['location']} {doc['summary']} {doc['target_audience']}"
-    event_vector = encoder.encode(values_string).tolist()
-
-    if is_similar_event(client, collection_name, event_vector, threshold):
-        return f"Skipped event: {doc['Title']} (similar to an existing event)."
-
-    client.upload_points(
-        collection_name=collection_name,
-        points=[models.PointStruct(id=doc.get("id", 0), vector=event_vector, payload=doc)],
-    )
-    return f"Inserted event: {doc['Title']} into the database."
 
 def get_user_preferences(user_data,
     name_weight = 0,
