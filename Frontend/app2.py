@@ -323,7 +323,7 @@ def main():
                 key="date_filter"
             )
             
-            event_types = ['All', 'Conference', 'Festival', 'Workshop','Competition']
+            event_types = ['All', 'Conference', 'Festival', 'Workshop']
             selected_type = st.selectbox("Event Type", event_types)
             
         # Apply filters
