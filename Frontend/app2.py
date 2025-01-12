@@ -11,7 +11,7 @@ EVENTS_PATH = script_dir/"events.json"
 @st.cache_data
 
 def start():
-    er.initialize_collection("my_events")
+    er.ensure_initialization("my_events")
 
     with open(EVENTS_PATH, 'r') as f:
         documents = json.load(f)
