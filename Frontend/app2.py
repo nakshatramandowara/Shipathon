@@ -14,7 +14,7 @@ EVENTS_PATH = script_dir/"events.json"
 def start():
     er.initialize_collection("my_events")
 
-    with open("events.json", "r", encoding="utf-8") as f:
+    with open(EVENTS_PATH, "r", encoding="utf-8") as f:
         raw_content = f.read()
         print(raw_content)
         documents = json.loads(raw_content)
