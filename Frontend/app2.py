@@ -7,7 +7,7 @@ from pathlib import Path
 from backend import event_recommender as er
 
 script_dir = Path(__file__).parent
-EVENTS_PATH = Path("events.json")
+EVENTS_PATH = script_dir/"events.json"
 
 @st.cache_data
 def start():
@@ -29,8 +29,8 @@ if 'username' not in st.session_state:
     st.session_state.username = None
 
 # File paths
-USER_DB_PATH = Path("user_db.json")
-USER_PREFS_PATH = Path("user_preferences.json")
+USER_DB_PATH = script_dir/"user_db.json"
+USER_PREFS_PATH = script_dir/"user_preferences.json"
 
 # Initialize storage files if they don't exist
 
