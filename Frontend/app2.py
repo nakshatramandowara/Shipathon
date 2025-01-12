@@ -290,7 +290,7 @@ def main():
         if(role == 'Student'):
             new_department = st.selectbox("Choose department",options = departments)
             new_age = st.number_input('Enter Age', min_value=1, max_value=100, value=20, step=1,key="reg_age")
-            new_year = st.number_input("Enter your degree-year",min_value=1,max_value=10,value=2,,step=1,key = "reg_year")
+            new_year = st.number_input("Enter your degree-year",min_value=1,max_value=10,value=2,step=1,key = "reg_year")
             new_gender = st.selectbox("choose gender",options = gender)
 
 
