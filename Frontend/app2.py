@@ -158,7 +158,7 @@ def main():
         new_password = st.text_input("Choose Password", type="password", key="reg_password")
         
         roles = ['Student', 'professor']  # Removed 'Organiser' role
-        categories = ['Technology', 'Entertainment', 'Sports', 'Business', 'Arts']
+        categories = ['Technology', 'Entertainment', 'Sports', 'Business', 'Cultural']
         gender = ["male", "female"]
         departments = ["physics", "maths", "electrical","computer"]
 
