@@ -160,7 +160,7 @@ def main():
         roles = ['Student', 'professor']  # Removed 'Organiser' role
         categories = ['Technology', 'Entertainment', 'Sports', 'Business', 'Arts']
         gender = ["male", "female"]
-        departments = ["physics", "maths", "electrical"]
+        departments = ["physics", "maths", "electrical","computer"]
 
         role = st.selectbox("Choose Role", options=roles)
         if role == 'Student':
