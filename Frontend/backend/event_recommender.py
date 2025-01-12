@@ -33,6 +33,7 @@ def ensure_initialization():
         events_file = script_dir/"events.json"
     
         with open(events_file, 'r') as f:
+            print(f)
             documents = json.load(f)
         
         # Create points list for batch upload
