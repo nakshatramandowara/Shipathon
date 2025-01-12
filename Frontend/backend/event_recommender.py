@@ -97,7 +97,7 @@ def get_user_preferences(user_data,
   year_weight = 1,
   interests_weight = 5,
   past_events_weight = 1,
-  NA_weight = 0.6,
+  NA_weight = 2,
 ):
   '''
   dumps results in search_results.json
