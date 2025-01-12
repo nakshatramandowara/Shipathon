@@ -282,7 +282,7 @@ def main():
         new_password = st.text_input("Choose Password", type="password", key="reg_password")
         
         roles = ['Organiser','Student','Faculty']
-        categories = ['Technology', 'Entertainment', 'Sports', 'Business', 'Cultural']
+        categories = ['Technology', 'Entertainment', 'Sports', 'Business', 'Arts']
         gender = ["male","female"]
         departments = ["Physics","Mathematics","Electrical"]
 
