@@ -10,7 +10,7 @@ encoder = SentenceTransformer("all-MiniLM-L6-v2")
 client = QdrantClient(":memory:")
 _is_initialized = False
 
-def ensure_initialization(name):
+def ensure_initialization(name="my_events"):
     """
     Ensures the collection is initialized and populated with events.
     Uses a global flag to prevent multiple initializations.
