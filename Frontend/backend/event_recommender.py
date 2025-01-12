@@ -165,4 +165,4 @@ def main():
   get_user_preferences(user_data)
 
 if __name__ == '__main__':
-  main()
+    main()
