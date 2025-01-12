@@ -117,7 +117,6 @@ def display_events_as_list(events):
 
 # Ranked interest selection
 def select_ranked_preferences(categories):
-def select_ranked_preferences(categories):
     st.subheader("Rank Your Interests")
     st.write("Rank the categories based on your interests. Drag the most important ones to the top. You can leave some ranks as 'None' if not interested in those categories.")
 
