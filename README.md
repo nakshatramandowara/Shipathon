@@ -53,7 +53,20 @@ The solution incorporates advanced features such as intelligent event recommenda
 
 ### 3. **Front-End Development (Streamlit)**  
 - Created an intuitive and interactive user interface.  
-- Allowed dynamic input forms, real-time event data display, and backend integration.  
+- Allowed dynamic input forms, real-time event data display, and backend integration.
+- 
+### 4. **MongoDB (Database Management)**
+
+-Integrated MongoDB to handle structured and semi-structured event data effectively.
+
+-Provided scalability for storing user profiles, preferences, and interaction history.
+
+-Enabled fast querying and aggregation for analytics and personalized recommendations.
+
+-Offered a robust backup and recovery system to ensure data reliability.
+
+
+
 
 ---
 
