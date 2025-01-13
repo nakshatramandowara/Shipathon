@@ -203,25 +203,31 @@ def select_ranked_preferences(categories):
     none_count = 0
     
     with st.form("ranked_preferences"):
-        for i, category in enumerate(categories, start=1):
-            selected = st.selectbox(
-                f"Rank {i}:",
-                options=["None"] + categories,
-                key=f"rank_{i}",
+        ranked_preferences = [None] * len(categories)  # To store user rankings
+        for i in range(len(categories)):
+            # Dynamically filter the options based on previous selections
+            available_options = ["None"] + [
+                category
+                for category in categories
+                if category not in ranked_preferences or category == ranked_preferences[i]
+            ]
+            
+            # Create the selectbox
+            ranked_preferences[i] = st.selectbox(
+                f"Rank {i + 1}:",
+                options=available_options,
+                key=f"rank_{i + 1}",
             )
-            if selected == "None":
-                none_count += 1
-            elif selected not in ranked_preferences:
-                ranked_preferences.append(selected)
-                
+        
         submitted = st.form_submit_button("Submit Rankings")
         
         if submitted:
-            if len(ranked_preferences) + none_count != len(categories):
+            none_count = ranked_preferences.count("None")
+            if len(set(ranked_preferences) - {"None"}) + none_count != len(categories):
                 st.warning("Please rank all categories uniquely, or leave them as 'None'.")
-            
-        # Always return just the ranked preferences, even if incomplete
-        return ranked_preferences
+            else:
+                st.success("Rankings submitted successfully!")
+                st.write("Your Rankings:", ranked_preferences)
 
 def load_env_and_setup():
     load_dotenv()
