@@ -131,14 +131,21 @@ def get_recommendations(user_prefs, events, filters=None):
 
 def display_events_as_list(events):
     st.title("Event List")
+    username = st.session_state.username
+    user_data = st.session_state.preferences_collection.find_one({"name": username})
+    past_events = user_data.get("past_events", []) if user_data else []
+
     for i, event in enumerate(events):
         col1, col2 = st.columns([4, 1])  # Two columns: one for the event details, one for the checkbox
-        
+
+        event_title = event.get("Title", "Untitled Event")
+        is_attended = event_title in past_events  # Check if the event is in past_events
+
         with col1:
-            if event.get("attended", False):  # Dim out if attended
+            if is_attended:  # Dim out if attended
                 st.markdown(
                     f"<div style='opacity: 0.5;'>"
-                    f"<h3>**{event.get('Title', 'Untitled Event')}**</h3>"
+                    f"<h3>**{event_title}**</h3>"
                     f"📅 **Date:** {event.get('date', 'N/A')}  🕒 **Time:** {event.get('time', 'N/A')}<br>"
                     f"📍 **Location:** {event.get('location', 'N/A')}<br>"
                     f"<p style='font-size: smaller;'>{event.get('summary', 'N/A')}</p>"
@@ -146,16 +153,16 @@ def display_events_as_list(events):
                     unsafe_allow_html=True,
                 )
             else:
-                st.markdown(f"### **{event.get('Title', 'Untitled Event')}**")
+                st.markdown(f"### **{event_title}**")
                 st.markdown(f"📅 **Date:** {event.get('date', 'N/A')}  🕒 **Time:** {event.get('time', 'N/A')}")
                 st.markdown(f"📍 **Location:** {event.get('location', 'N/A')}")
                 st.markdown(f"<p style='font-size: smaller;'>{event.get('summary', 'N/A')}</p>", unsafe_allow_html=True)
-        
+
         with col2:
-            attended = st.checkbox("Attended", key=f"attended_{i}")
-            if attended:
+            attended = st.checkbox("Attended", key=f"attended_{i}", value=is_attended)
+            if attended and not is_attended:  # If checkbox is checked and event isn't already in past_events
                 add_event_to_past(event)
-                event["attended"] = True  # Mark the event as attended
+                st.experimental_rerun()  # Refresh the page to reflect the changes
         st.markdown("---")
 
 # Function to handle the attended events
