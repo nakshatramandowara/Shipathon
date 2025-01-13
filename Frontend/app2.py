@@ -131,16 +131,46 @@ def get_recommendations(user_prefs, events, filters=None):
 
 def display_events_as_list(events):
     st.title("Event List")
-    for event in events:
-        st.markdown(f"### **{event.get('Title', 'Untitled Event')}**")
-        date = event.get("date", "N/A")
-        time = event.get("time", "N/A")
-        st.markdown(f"📅 **Date:** {date}  🕒 **Time:** {time}")
-        location = event.get("location", "N/A")
-        st.markdown(f"📍 **Location:** {location}")
-        summary = event.get("summary", "N/A")
-        st.markdown(f"<p style='font-size: smaller;'>{summary}</p>", unsafe_allow_html=True)
+    for i, event in enumerate(events):
+        col1, col2 = st.columns([4, 1])  # Two columns: one for the event details, one for the checkbox
+        
+        with col1:
+            if event.get("attended", False):  # Dim out if attended
+                st.markdown(
+                    f"<div style='opacity: 0.5;'>"
+                    f"<h3>**{event.get('Title', 'Untitled Event')}**</h3>"
+                    f"📅 **Date:** {event.get('date', 'N/A')}  🕒 **Time:** {event.get('time', 'N/A')}<br>"
+                    f"📍 **Location:** {event.get('location', 'N/A')}<br>"
+                    f"<p style='font-size: smaller;'>{event.get('summary', 'N/A')}</p>"
+                    f"</div>",
+                    unsafe_allow_html=True,
+                )
+            else:
+                st.markdown(f"### **{event.get('Title', 'Untitled Event')}**")
+                st.markdown(f"📅 **Date:** {event.get('date', 'N/A')}  🕒 **Time:** {event.get('time', 'N/A')}")
+                st.markdown(f"📍 **Location:** {event.get('location', 'N/A')}")
+                st.markdown(f"<p style='font-size: smaller;'>{event.get('summary', 'N/A')}</p>", unsafe_allow_html=True)
+        
+        with col2:
+            attended = st.checkbox("Attended", key=f"attended_{i}")
+            if attended:
+                add_event_to_past(event)
+                event["attended"] = True  # Mark the event as attended
         st.markdown("---")
+
+# Function to handle the attended events
+def add_event_to_past(event):
+    """Add the event to the user's past events list in the database."""
+    try:
+        username = st.session_state.username
+        st.session_state.preferences_collection.update_one(
+            {"name": username},
+            {"$addToSet": {"past_events": event}}
+        )
+        st.success(f"Event '{event.get('Title', 'Untitled Event')}' marked as attended!")
+    except Exception as e:
+        st.error(f"Failed to mark event as attended: {e}")
+
 
 def select_ranked_preferences(categories):
         
