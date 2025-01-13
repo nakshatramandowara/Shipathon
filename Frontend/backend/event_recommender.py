@@ -26,7 +26,6 @@ def ensure_initialization(name="my_events"):
                 # Delete the existing collection
                 client.delete_collection(name)
                 print(f"Collection '{name}' deleted.")
-                force_reinit=False
             else:
                 print(f"Collection '{name}' already exists.")
                 return  # Skip reinitialization if no force
