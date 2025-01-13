@@ -254,8 +254,6 @@ def select_ranked_preferences(categories):
     return final_rankings
 
 
-
-
 def load_env_and_setup():
     load_dotenv()
     setup_mongodb()
@@ -308,8 +306,8 @@ def main():
         
         roles = ["Student", "Professor", "Organiser"]  
         gender = ["Male", "Female", "Other"]
-        departments = ["Physics", "Maths", "Electrical", "Computer Science", "Chemical", "Mechanical", "Textile"]
-        categories = ["Technology", "Entertainment", "Sports", "Business", "Cultural"]
+        departments = ["Electrical", "Maths", "Computer Science", "Physics", "Chemical", "Mechanical","Civil","Biotech","Textile"]
+        categories = ["Technology", "Entertainment", "Sports", "Business", "Cultural","Academic"]
         
         role = st.selectbox("Choose Role", options=roles)
         if role == "Student":
@@ -317,7 +315,12 @@ def main():
             new_age = st.number_input("Enter Age", min_value=1, max_value=100, value=20, step=1, key="reg_age")
             new_year = st.number_input("Enter Degree-Year", min_value=1, max_value=10, value=2, step=1, key="reg_year")
             new_gender = st.selectbox("Choose Gender", options=gender)
-    
+        elif role == "Professor":
+            new_department = st.selectbox("Choose Department", options=departments)
+            new_age = st.number_input("Enter Age", min_value=1, max_value=100, value=40, step=1, key="reg_age")
+            new_year = ""
+            new_gender = st.selectbox("Choose Gender", options=gender)
+            
             # Call the updated ranked preferences function
             select_ranked_preferences(categories)
     
