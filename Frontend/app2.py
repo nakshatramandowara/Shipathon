@@ -71,7 +71,7 @@ def save_user(username, password, role, department, age, year, preferences, gend
             "age": age,
             "department": department,
             "year": year,
-            "interests": [100*(len(preferences)-i)*preferences[i] for i in range(len(preferences))],
+            "interests": [(len(preferences)-i)*preferences[i] for i in range(len(preferences))],
             "past_events": past_events
         }
         f.seek(0)
