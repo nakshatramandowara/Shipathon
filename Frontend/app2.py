@@ -30,12 +30,13 @@ def setup_mongodb():
         try:
             client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
             client.server_info()  # Test connection
-            db = client['event_app']
+            
         except Exception as e:
             raise SystemExit(f"Error: Failed to connect to MongoDB. Details: {e}. Exiting.")
     foo()
     @st.cache_data
     def foo2():
+        global db = client['event_app']
         # Store collections in session state
         st.session_state.users_collection = db['users']
         st.session_state.preferences_collection = db['preferences']
