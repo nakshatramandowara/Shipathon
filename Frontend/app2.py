@@ -235,10 +235,7 @@ def select_ranked_preferences(categories):
             index=available_options.index(current_selection) if current_selection in available_options else 0,
             key=f"rank_{i + 1}"
         )
-        
      
-     
-    
     # Use cached function to get final rankings
     final_rankings = get_final_rankings(tuple(new_rankings))
     
@@ -249,14 +246,6 @@ def select_ranked_preferences(categories):
     
     return list(final_rankings)
     
-    # Display current rankings
-    if final_rankings:
-        st.write("\nYour current rankings:")
-        for i, rank in enumerate(final_rankings, 1):
-            st.write(f"{i}. {rank}")
-    
-    return final_rankings
-
 
 def load_env_and_setup():
     load_dotenv()
