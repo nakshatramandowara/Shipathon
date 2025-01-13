@@ -18,7 +18,7 @@ def ensure_initialization(name="my_events"):
     """
     global _is_initialized
     global force_reinit
-    force_reinit=True
+
     if not _is_initialized or force_reinit:
         # Check if the collection exists
         collections = client.get_collections().collections
