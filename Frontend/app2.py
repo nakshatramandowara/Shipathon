@@ -36,7 +36,7 @@ def setup_mongodb():
     foo()
     @st.cache_data
     def foo2():
-        global db = client['event_app']
+        db = client['event_app']
         # Store collections in session state
         st.session_state.users_collection = db['users']
         st.session_state.preferences_collection = db['preferences']
