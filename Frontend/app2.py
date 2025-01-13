@@ -196,30 +196,45 @@ def display_events_as_list(events):
 
 def select_ranked_preferences(categories):
     st.subheader("Rank Your Interests")
-    st.write("Rank the categories based on your interests. Drag the most important ones to the top.")
-
+    st.write("Rank the categories based on your interests. Select items in order of preference.")
+    
     # Initialize session state for rankings if not already present
     if "ranked_preferences" not in st.session_state:
-        st.session_state.ranked_preferences = [None] * len(categories)
-
+        st.session_state.ranked_preferences = ["None"] * len(categories)
+    
+    # Create a list of already selected items (excluding "None")
+    selected_items = [
+        item for item in st.session_state.ranked_preferences 
+        if item != "None"
+    ]
+    
+    # Create selectboxes for each rank
     for i in range(len(categories)):
-        # Ensure the current selection is always included in the options
+        # Get available options for this rank
+        available_options = ["None"]
         current_selection = st.session_state.ranked_preferences[i]
-        available_options = ["None"] + [
-            category
-            for category in categories
-            if category not in st.session_state.ranked_preferences or category == current_selection
-        ]
-
-        # Create the selectbox with persistent state
-        selected_option = st.selectbox(
+        
+        # Add categories that haven't been selected yet or are currently selected at this position
+        for category in categories:
+            if category not in selected_items or category == current_selection:
+                available_options.append(category)
+        
+        # Create the selectbox
+        selected = st.selectbox(
             f"Rank {i + 1}:",
             options=available_options,
+            index=available_options.index(current_selection) if current_selection in available_options else 0,
             key=f"rank_{i + 1}"
         )
-
-        # Update session state
-        st.session_state.ranked_preferences[i] = selected_option
+        
+        # Update the selection in session state
+        if selected != st.session_state.ranked_preferences[i]:
+            st.session_state.ranked_preferences[i] = selected
+            # If we selected something new (not "None"), remove it from other positions
+            if selected != "None":
+                for j in range(len(categories)):
+                    if j != i and st.session_state.ranked_preferences[j] == selected:
+                        st.session_state.ranked_preferences[j] = "None"
 
 
 
