@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 from datetime import datetime
@@ -20,6 +19,11 @@ users_collection = db['users']
 preferences_collection = db['preferences']
 events_collection = db['events']
 
+script_dir = Path(__file__).parent
+EVENTS_PATH = script_dir/"events.json"
+USER_DB_PATH = script_dir/"user_db.json"
+USER_PREFS_PATH = script_dir/"user_preferences.json"
+
 @st.cache_data
 def start():
     er.ensure_initialization("my_events")
@@ -39,6 +43,36 @@ if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
 if 'username' not in st.session_state:
     st.session_state.username = None
+
+# Initialize storage
+def init_storage():
+    # Initialize MongoDB collections if they don't exist
+    # For MongoDB, collections are created automatically when first document is inserted
+    # But we can create indexes and validate empty collections
+    
+    # Check if users collection is empty
+    if users_collection.count_documents({}) == 0:
+        # Create indexes for faster queries
+        users_collection.create_index('username', unique=True)
+    
+    # Check if preferences collection is empty
+    if preferences_collection.count_documents({}) == 0:
+        preferences_collection.create_index('name', unique=True)
+    
+    # Check if events collection is empty
+    if events_collection.count_documents({}) == 0:
+        events_collection.create_index('id', unique=True)
+        # Initialize with sample events if needed
+        sample_events = {}  # Your sample events here
+        if sample_events:
+            events_collection.insert_many(sample_events)
+    
+    # Keep the file paths for backward compatibility
+    # but store empty JSON objects
+    for path in [USER_DB_PATH, USER_PREFS_PATH, EVENTS_PATH]:
+        if not path.exists():
+            with open(path, 'w') as f:
+                json.dump({}, f)
 
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
@@ -84,12 +118,6 @@ def verify_user(username, password):
 def get_user_preferences(username):
     prefs = preferences_collection.find_one({'name': username})
     return prefs if prefs else {}
-
-
-# Function to save a new event
-
-
-# Function to delete an event
 
 
 
