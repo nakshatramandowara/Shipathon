@@ -112,13 +112,11 @@ def display_events_as_list(events):
         st.markdown("---")
 
 def select_ranked_preferences(categories):
-    if not categories:
-        return []
         
     st.subheader("Rank Your Interests")
     st.write("Rank the categories based on your interests. Drag the most important ones to the top.")
     
-    ranked_preferences = []
+    ranked_preferences = ["",]
     none_count = 0
     
     with st.form("ranked_preferences"):
@@ -136,7 +134,7 @@ def select_ranked_preferences(categories):
         submitted = st.form_submit_button("Submit Rankings")
         
         if submitted:
-            if len(ranked_preferences) + none_count != len(categories):
+            if len(ranked_preferences)-1 + none_count != len(categories):
                 st.warning("Please rank all categories uniquely, or leave them as 'None'.")
             
         # Always return just the ranked preferences, even if incomplete
