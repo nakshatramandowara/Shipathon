@@ -212,14 +212,19 @@ def select_ranked_preferences(categories):
             if category not in ranked_preferences or ranked_preferences[i] == category
         ]
 
-        # Create the selectbox
-        ranked_preferences[i] = st.selectbox(
+        # Create the selectbox with persistent state
+        selected_option = st.selectbox(
             f"Rank {i + 1}:",
             options=available_options,
-            key=f"rank_{i + 1}",
+            key=f"rank_{i + 1}"
         )
-    st.write("Your Rankings:", ranked_preferences)
+
+        # Update session state
+        if ranked_preferences[i] != selected_option:
+            ranked_preferences[i] = selected_option
+
     return ranked_preferences
+
 
 
 
@@ -286,6 +291,7 @@ def main():
             new_year = st.number_input("Enter Degree-Year", min_value=1, max_value=10, value=2, step=1, key="reg_year")
             new_gender = st.selectbox("Choose Gender", options=gender)
     
+            # Call the updated ranked preferences function
             ranked_preferences = select_ranked_preferences(categories)
     
             if st.button("Create Account"):
@@ -293,6 +299,7 @@ def main():
                     new_username, new_password, role, new_department, 
                     new_age, new_year, ranked_preferences, new_gender, []
                 )
+
 
     # Main content - Recommendations
     if st.session_state.logged_in:
