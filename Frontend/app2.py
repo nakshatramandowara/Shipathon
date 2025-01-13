@@ -156,7 +156,6 @@ def select_ranked_preferences(categories):
         return ranked_preferences
 
 
-@st.cache_resource
 def load_env_and_setup():
     load_dotenv()
     setup_mongodb()
