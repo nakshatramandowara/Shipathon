@@ -62,7 +62,7 @@ def ensure_initialization(name="my_events"):
         print(f"Initialized with {len(points)} events")
             
        
-def get_user_preferences(delete=False,user_data,
+def get_user_preferences(user_data,
     name_weight=0.0,
     gender_weight=0.3,
     role_weight=3.0,
@@ -71,13 +71,14 @@ def get_user_preferences(delete=False,user_data,
     interests_weight=5.5,
     past_events_weight=2.0,
     NA_weight=0.8,
+    delete=False,
 ):
     """
     Get recommendations for a user based on their preferences.
     Ensures collection is initialized before searching.
     """
     # Ensure collection is initialized before searching
-    if(delete)
+    if(delete):
         collections = client.get_collections().collections
         name="my_events"
         if name in [col.name for col in collections]:
