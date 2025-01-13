@@ -79,7 +79,8 @@ def save_user(username, password, role, department, age, year, preferences, gend
             {'$set': preferences_data},
             upsert=True
         )
-        st.success("User saved successfully!")
+        st.success("Account created successfully!")
+        st.session_state.register = False
         
     except Exception as e:
         st.error(f"MongoDB Error: {str(e)}")
@@ -217,8 +218,6 @@ def main():
                     new_username, new_password, role, new_department, 
                     new_age, new_year, ranked_preferences, new_gender, []
                 )
-                st.success("Account created successfully!")
-                st.session_state.register = False
 
     # Main content - Recommendations
     if st.session_state.logged_in:
