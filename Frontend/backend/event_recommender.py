@@ -121,11 +121,7 @@ def get_user_preferences(user_data,
     resulting_data = []
     for hi in hits:
         resulting_data.append(hi.payload)
-
-    # Save results
-    output_file = script_dir/"search_results.json"
-    with open(output_file, "w") as f:
-        json.dump(resulting_data, f, indent=4)
+    
 
     return resulting_data
 
