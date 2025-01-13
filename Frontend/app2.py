@@ -96,6 +96,7 @@ def verify_user(username, password):
     except Exception:
         return False
 
+@cache_data
 def get_user_preferences(username):
     try:
         prefs = st.session_state.preferences_collection.find_one({'name': username})
@@ -107,7 +108,8 @@ def get_user_preferences(username):
 def load_events():
     with open(EVENTS_PATH, 'r') as f:
         return json.load(f)
-
+        
+@cache_data
 def get_recommendations(user_prefs, events, filters=None):
     return er.get_user_preferences(user_prefs)
 
@@ -153,10 +155,17 @@ def select_ranked_preferences(categories):
         # Always return just the ranked preferences, even if incomplete
         return ranked_preferences
 
+
+@st.cache_resource
+def load_env_and_setup():
+    load_dotenv()
+    setup_mongodb()
+
+
 def main():
     st.title("Event Recommendation System")
-    load_dotenv()
     
+    load_env_and_setup()
     # Initialize session state variables
     if 'logged_in' not in st.session_state:
         st.session_state.logged_in = False
@@ -165,8 +174,7 @@ def main():
     if 'role' not in st.session_state:
         st.session_state.role = None
 
-    # Setup MongoDB
-    setup_mongodb()
+
 
     # Sidebar for login/logout functionality
     with st.sidebar:
