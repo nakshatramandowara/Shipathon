@@ -23,7 +23,7 @@ USER_PREFS_PATH = script_dir / "user_preferences.json"
 def setup_mongodb():
     """Setup MongoDB connection."""
     @st.cache_resource
-    def foo()
+    def foo():
         MONGO_URI = os.getenv('MONGODB_URI')
         if not MONGO_URI:
             raise SystemExit("Error: MongoDB URI not found in environment variables. Exiting.")
@@ -35,7 +35,7 @@ def setup_mongodb():
             raise SystemExit(f"Error: Failed to connect to MongoDB. Details: {e}. Exiting.")
     foo()
     @st.cache_data
-    def foo2()
+    def foo2():
         # Store collections in session state
         st.session_state.users_collection = db['users']
         st.session_state.preferences_collection = db['preferences']
