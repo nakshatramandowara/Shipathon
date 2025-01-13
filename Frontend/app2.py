@@ -220,7 +220,7 @@ def main():
         new_password = st.text_input("Choose Password", type="password", key="reg_password")
         
         roles = ["Student", "Professor", "Organiser"]  
-        categories = ["Technology", "Entertainment", "Sports", "Business", "Cultural"]
+        
         gender = ["Male", "Female", "Other"]
         departments = ["Physics", "Maths", "Electrical", "Computer Science", "Chemical", "Mechanical", "Textile"]
     
@@ -232,6 +232,7 @@ def main():
             new_gender = st.selectbox("Choose Gender", options=gender)
     
             # Use the new ranked preferences function
+    categories = ["Technology", "Entertainment", "Sports", "Business", "Cultural"]
     ranked_preferences = select_ranked_preferences(categories)
     
     if st.button("Create Account"):
