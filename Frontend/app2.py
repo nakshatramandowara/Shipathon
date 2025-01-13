@@ -115,8 +115,26 @@ def select_ranked_preferences(categories):
     st.subheader("Rank Your Interests")
     st.write("Rank the categories based on your interests. Drag the most important ones to the top.")
     
-    ranked_preferences = st.multiselect("Select and rank your interests:", categories, default=categories)
-    return ranked_preferences
+    ranked_preferences = []
+    none_count = 0
+    with st.form("ranked_preferences"):
+        for i, category in enumerate(categories, start=1):
+            selected = st.selectbox(
+                f"Rank {i}:",
+                options=["None"] + categories,
+                key=f"rank_{i}",
+            )
+            if selected == "None":
+                none_count += 1
+            elif selected not in ranked_preferences:
+                ranked_preferences.append(selected)
+        submitted = st.form_submit_button("Submit Rankings")
+        if submitted:
+            if len(ranked_preferences) + none_count != len(categories):
+                st.warning("Please rank all categories uniquely, or leave them as 'None'.")
+            else:
+                return ranked_preferences
+    return None
 
 def main():
     st.title("Event Recommendation System")
