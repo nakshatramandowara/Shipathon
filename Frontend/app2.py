@@ -160,12 +160,13 @@ def remove_event_from_past(event):
     except Exception as e:
         st.error(f"Failed to remove event from attended list: {e}")
 
-
 def display_events_as_list(events):
     st.title("Event List")
     username = st.session_state.username
     user_data = st.session_state.preferences_collection.find_one({"name": username})
     past_events = user_data.get("past_events", []) if user_data else []
+
+    should_rerun = False  # Track if rerun is needed
 
     for i, event in enumerate(events):
         col1, col2 = st.columns([4, 1])  # Two columns: one for the event details, one for the checkbox
@@ -194,13 +195,14 @@ def display_events_as_list(events):
             attended = st.checkbox("Attended", key=f"attended_{i}", value=is_attended)
             if attended and not is_attended:  # Add event when checked and not already attended
                 add_event_to_past(event)
-                st.experimental_rerun()
+                should_rerun = True
             elif not attended and is_attended:  # Remove event when unchecked and already attended
                 remove_event_from_past(event)
-                st.experimental_rerun()
+                should_rerun = True
         st.markdown("---")
 
-
+    if should_rerun:
+        st.experimental_rerun()
 
 
 
