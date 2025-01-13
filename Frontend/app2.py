@@ -101,7 +101,7 @@ def save_user(username, password, role, department, age, year, preferences, gend
             )
         except Exception as e:
             st.error(f"MongoDB Error: {str(e)}")
-            global USE_MONGO
+            
             USE_MONGO = False
     
     # Fallback to JSON if MongoDB fails
