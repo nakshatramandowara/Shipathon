@@ -14,10 +14,8 @@ script_dir = Path(__file__).parent
 EVENTS_PATH = script_dir / "events.json"
 USER_DB_PATH = script_dir / "user_db.json"
 USER_PREFS_PATH = script_dir / "user_preferences.json"
+reset_collection=True
 
-# @st.cache_data
-# def start():
-#     er.ensure_initialization("my_events")
 def setup_mongodb():
     @st.cache_resource
     def setup_mongo_connection():
@@ -127,7 +125,7 @@ def load_events():
         return json.load(f)
         
 def get_recommendations(user_prefs, events, filters=None):
-    return er.get_user_preferences(user_prefs)
+    return er.get_user_preferences(delete=reset_collection,user_prefs)
 
 def display_events_as_list(events):
     st.title("Event List")
@@ -351,6 +349,7 @@ def main():
         user_prefs = get_user_preferences(st.session_state.username)
         events = st.session_state.events_collection.find()
         recommended_events = get_recommendations(user_prefs, list(events), filters)
+        reset_collection=False
         display_events_as_list(recommended_events)
 
 if __name__ == "__main__":
