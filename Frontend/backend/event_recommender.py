@@ -82,7 +82,7 @@ def get_user_preferences(user_data,
         collections = client.get_collections().collections
         name="my_events"
         if name in [col.name for col in collections]:
-            client.delete_collections(name)
+            client.delete_collection(name)
     ensure_initialization()
     
     # Initialize the combined vector with zeros
