@@ -18,7 +18,7 @@ USER_PREFS_PATH = script_dir / "user_preferences.json"
 # @st.cache_data
 # def start():
 #     er.ensure_initialization("my_events")
-def setup_mongo_connection():
+def setup_mongodb():
     @st.cache_resource
     def setup_mongo_connection():
         """Setup MongoDB connection. Cached as a shared resource."""
