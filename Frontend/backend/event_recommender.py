@@ -38,7 +38,7 @@ def ensure_initialization(name="my_events"):
         
         # Create points list for batch upload
         points = []
-        tags_weight = -10.0
+        tags_weight = 3.5
         for idx, doc in enumerate(documents):
             values_string = f"{doc['Title']} {doc['location']} {doc['summary']} {doc['target_audience']}"
             vector = encoder.encode(values_string).tolist()
