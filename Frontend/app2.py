@@ -286,7 +286,7 @@ def select_ranked_preferences(categories):
         st.write("\nYour current rankings:")
         for i, rank in enumerate(final_rankings, 1):
             st.write(f"{i}. {rank}")
-
+    return final_rankings
     
 
 def load_env_and_setup():
