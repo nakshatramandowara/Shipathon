@@ -151,7 +151,7 @@ def display_events_as_list(events):
             "Sports": "⚽",
             "Business": "📊",
             "Cultural": "🎨",
-            "Education": "📚",
+            "Academic": "📚",
         }
 
         def format_tag(tag):
