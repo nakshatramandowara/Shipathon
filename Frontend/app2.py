@@ -193,9 +193,6 @@ def display_events_as_list(events):
     if should_rerun:
         st.rerun()
 
-
-import streamlit as st
-
 @st.cache_data
 def get_available_options(categories, current_selections, current_selection, position):
     """Cache the computation of available options for each dropdown."""
