@@ -194,58 +194,65 @@ def display_events_as_list(events):
         st.rerun()
 
 
-@st.cache_data
-def get_available_options(categories, current_selections, current_selection):
-    """Cache the computation of available options for each dropdown"""
-    return ["None"] + [
-        category for category in categories 
-        if category == current_selection or category not in current_selections
-    ]
-
-@st.cache_data
-def get_final_rankings(rankings):
-    """Cache the computation of final rankings list"""
-    return [rank for rank in rankings if rank != "None"]
-
 def select_ranked_preferences(categories):
     st.subheader("Rank Your Interests")
     st.write("Rank the categories based on your interests. Select items in order of preference.")
     
-    # Initialize session state only once
+    # Initialize session state
     if "ranked_preferences" not in st.session_state:
         st.session_state.ranked_preferences = ["None"] * len(categories)
+        
+    # Keep track of selections in this run to prevent duplicates
+    current_selections = set()
+    new_rankings = ["None"] * len(categories)
     
-    # Pre-calculate current selections once
-    current_selections = frozenset(pref for pref in st.session_state.ranked_preferences if pref != "None")
-    new_rankings = st.session_state.ranked_preferences.copy()
-    
+    # Create selectboxes for each rank
     for i in range(len(categories)):
-        current_selection = new_rankings[i]
+        # Get current selection for this position
+        current_selection = st.session_state.ranked_preferences[i]
         
-        # Use cached function to get available options
-        available_options = get_available_options(
-            tuple(categories),  # Convert to tuple since lists aren't hashable
-            current_selections,
-            current_selection
-        )
-        
+        # Build available options
+        available_options = ["None"]
+        for category in categories:
+            # Category is available if it's either:
+            # 1. Not yet selected in this run
+            # 2. Currently selected in this position
+            if category not in current_selections or category == current_selection:
+                available_options.append(category)
+                
+        # Find the correct default index
+        default_index = 0
+        if current_selection in available_options:
+            default_index = available_options.index(current_selection)
+            
+        # Create the selectbox
         selected = st.selectbox(
             f"Rank {i + 1}:",
             options=available_options,
-            index=available_options.index(current_selection) if current_selection in available_options else 0,
+            index=default_index,
             key=f"rank_{i + 1}"
         )
-     
-    # Use cached function to get final rankings
-    final_rankings = get_final_rankings(tuple(new_rankings))
+        
+        # Update tracking sets and lists
+        if selected != "None":
+            current_selections.add(selected)
+        new_rankings[i] = selected
     
+    # Update session state only after all selections are processed
+    if new_rankings != st.session_state.ranked_preferences:
+        st.session_state.ranked_preferences = new_rankings
+    
+    # Return only non-None rankings
+    final_rankings = [rank for rank in new_rankings if rank != "None"]
+    
+    # Display current rankings
     if final_rankings:
         st.write("\nYour current rankings:")
         for i, rank in enumerate(final_rankings, 1):
             st.write(f"{i}. {rank}")
     
-    return list(final_rankings)
-    
+    return final_rankings
+
 
 def load_env_and_setup():
     load_dotenv()
@@ -315,12 +322,12 @@ def main():
             new_gender = st.selectbox("Choose Gender", options=gender)
             
         # Call the updated ranked preferences function
-        ranked_preferences=select_ranked_preferences(categories)
+        select_ranked_preferences(categories)
 
         if st.button("Create Account"):
             save_user(
                 new_username, new_password, role, new_department, 
-                new_age, new_year, ranked_preferences, new_gender, []
+                new_age, new_year, st.session_state.ranked_preferences, new_gender, []
             )
 
 
