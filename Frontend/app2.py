@@ -125,7 +125,7 @@ def load_events():
         return json.load(f)
         
 def get_recommendations(user_prefs, events, filters=None):
-    return er.get_user_preferences(delete=reset_collection,user_prefs)
+    return er.get_user_preferences(user_prefs,delete=reset_collection)
 
 def display_events_as_list(events):
     st.title("Event List")
