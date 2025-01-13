@@ -198,43 +198,60 @@ def select_ranked_preferences(categories):
     st.subheader("Rank Your Interests")
     st.write("Rank the categories based on your interests. Select items in order of preference.")
     
-    # Initialize session state for rankings if not already present
+    # Initialize session state
     if "ranked_preferences" not in st.session_state:
         st.session_state.ranked_preferences = ["None"] * len(categories)
-    
-    # Create a list of already selected items (excluding "None")
-    selected_items = [
-        item for item in st.session_state.ranked_preferences 
-        if item != "None"
-    ]
+        
+    # Keep track of selections in this run to prevent duplicates
+    current_selections = set()
+    new_rankings = ["None"] * len(categories)
     
     # Create selectboxes for each rank
     for i in range(len(categories)):
-        # Get available options for this rank
-        available_options = ["None"]
+        # Get current selection for this position
         current_selection = st.session_state.ranked_preferences[i]
         
-        # Add categories that haven't been selected yet or are currently selected at this position
+        # Build available options
+        available_options = ["None"]
         for category in categories:
-            if category not in selected_items or category == current_selection:
+            # Category is available if it's either:
+            # 1. Not yet selected in this run
+            # 2. Currently selected in this position
+            if category not in current_selections or category == current_selection:
                 available_options.append(category)
-        
+                
+        # Find the correct default index
+        default_index = 0
+        if current_selection in available_options:
+            default_index = available_options.index(current_selection)
+            
         # Create the selectbox
         selected = st.selectbox(
             f"Rank {i + 1}:",
             options=available_options,
-            index=available_options.index(current_selection) if current_selection in available_options else 0,
+            index=default_index,
             key=f"rank_{i + 1}"
         )
         
-        # Update the selection in session state
-        if selected != st.session_state.ranked_preferences[i]:
-            st.session_state.ranked_preferences[i] = selected
-            # If we selected something new (not "None"), remove it from other positions
-            if selected != "None":
-                for j in range(len(categories)):
-                    if j != i and st.session_state.ranked_preferences[j] == selected:
-                        st.session_state.ranked_preferences[j] = "None"
+        # Update tracking sets and lists
+        if selected != "None":
+            current_selections.add(selected)
+        new_rankings[i] = selected
+    
+    # Update session state only after all selections are processed
+    if new_rankings != st.session_state.ranked_preferences:
+        st.session_state.ranked_preferences = new_rankings
+    
+    # Return only non-None rankings
+    final_rankings = [rank for rank in new_rankings if rank != "None"]
+    
+    # Display current rankings
+    if final_rankings:
+        st.write("\nYour current rankings:")
+        for i, rank in enumerate(final_rankings, 1):
+            st.write(f"{i}. {rank}")
+    
+    return final_rankings
 
 
 
