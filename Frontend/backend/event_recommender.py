@@ -60,13 +60,13 @@ def ensure_initialization(name="my_events"):
        
 def get_user_preferences(user_data,
     name_weight=0.0,
-    gender_weight=1.0,
+    gender_weight=0.3,
     role_weight=3.0,
     department_weight=2.0,
-    year_weight=1.0,
-    interests_weight=5.0,
-    past_events_weight=1.0,
-    NA_weight=2.0,
+    year_weight=0.5,
+    interests_weight=5.5,
+    past_events_weight=2.0,
+    NA_weight=0.8,
 ):
     """
     Get recommendations for a user based on their preferences.
