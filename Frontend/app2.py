@@ -202,6 +202,8 @@ def select_ranked_preferences(categories):
     # Initialize session state
     if "ranked_preferences" not in st.session_state:
         st.session_state.ranked_preferences = ["None"] * len(categories)
+    if "current_selections" not in st.session_state:
+        st.session_state.current_selections = []
 
     # Local variables for tracking current run
     current_selections = set(st.session_state.current_selections)
