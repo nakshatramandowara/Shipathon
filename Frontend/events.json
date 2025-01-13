@@ -83,15 +83,6 @@
         ]
     },
     {
-        "Title": "N/A",
-        "date": "N/A",
-        "time": "N/A",
-        "location": "N/A",
-        "summary": "N/A",
-        "target_audience": "N/A",
-        "Tags": []
-    },
-    {
         "Title": "Rendezvous '24: Pronite Artist Reveal and Pass Booking",
         "date": "05-10-2024",
         "time": "10:00",
@@ -298,14 +289,5 @@
         "Tags": [
             "Cultural"
         ]
-    },
-    {
-        "Title": "N/A",
-        "date": "N/A",
-        "time": "N/A",
-        "location": "N/A",
-        "summary": "N/A",
-        "target_audience": "N/A",
-        "Tags": []
     }
 ]
