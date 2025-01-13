@@ -58,16 +58,15 @@ def ensure_initialization(name="my_events"):
         print(f"Initialized with {len(points)} events")
             
        
-
 def get_user_preferences(user_data,
-    name_weight = 0,
-    gender_weight = 1,
-    role_weight = 3,
-    department_weight = 2,
-    year_weight = 1,
-    interests_weight = 5,
-    past_events_weight = 1,
-    NA_weight = 2,
+    name_weight=0.0,
+    gender_weight=1.0,
+    role_weight=3.0,
+    department_weight=2.0,
+    year_weight=1.0,
+    interests_weight=5.0,
+    past_events_weight=1.0,
+    NA_weight=2.0,
 ):
     """
     Get recommendations for a user based on their preferences.
@@ -76,19 +75,30 @@ def get_user_preferences(user_data,
     # Ensure collection is initialized before searching
     ensure_initialization()
     
-    weighted_text = (
-        f"{(user_data['name'] + ' ') * int(name_weight)}" +
-        f"{(user_data['gender'] + ' ') * int(gender_weight)}" +
-        f"{(user_data['role'] + ' ') * int(role_weight)}" +
-        f"{(user_data['department'] + ' ') * int(department_weight)}" +
-        f"{(str(user_data['year']) + ' ') * int(year_weight)}" +
-        f"{(' '.join(user_data['interests']) + ' ') * int(interests_weight)}"  +
-        f"{(' '.join(user_data['past_events']) + ' ') * int(past_events_weight)}"
-    )
+    # Initialize the combined vector with zeros
+    combined_vector = [0.0] * len(encoder.encode("dummy").tolist())  # Dummy encoding for vector size
     
+    # Helper function to scale vectors by weight and add to combined vector
+    def add_weighted_vector(text, weight):
+        if not text or weight == 0:
+            return
+        vector = encoder.encode(text).tolist()
+        for i in range(len(combined_vector)):
+            combined_vector[i] += vector[i] * weight
+    
+    # Add weighted vectors for each user attribute
+    add_weighted_vector(user_data.get('name', ''), name_weight)
+    add_weighted_vector(user_data.get('gender', ''), gender_weight)
+    add_weighted_vector(user_data.get('role', ''), role_weight)
+    add_weighted_vector(user_data.get('department', ''), department_weight)
+    add_weighted_vector(str(user_data.get('year', '')), year_weight)
+    add_weighted_vector(' '.join(user_data.get('interests', [])), interests_weight)
+    add_weighted_vector(' '.join(user_data.get('past_events', [])), past_events_weight)
+    
+    # Subtract weighted "N/A" vector
     na_vector = encoder.encode("N/A").tolist()
-    weighted_vector = encoder.encode(weighted_text).tolist()
-    combined_vector = [p - NA_weight*n for p, n in zip(weighted_vector, na_vector)]
+    for i in range(len(combined_vector)):
+        combined_vector[i] -= NA_weight * na_vector[i]
 
     # Query the vector database
     hits = client.query_points(
