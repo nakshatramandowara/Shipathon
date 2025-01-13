@@ -234,8 +234,8 @@ if not st.session_state.logged_in and st.session_state.get("register", False):
         # Use the new ranked preferences function
         ranked_preferences = select_ranked_preferences(categories)
     
-    if st.button("Create Account") and ranked_preferences:
-        preferences = ranked_preferences
+    if st.button("Create Account"):
+        preferences = ranked_preferences if ranked_preferences else []
         save_user(
             new_username, new_password, role, new_department, 
             new_age, new_year, preferences, new_gender, []
