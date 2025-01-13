@@ -321,14 +321,14 @@ def main():
             new_year = ""
             new_gender = st.selectbox("Choose Gender", options=gender)
             
-            # Call the updated ranked preferences function
-            select_ranked_preferences(categories)
-    
-            if st.button("Create Account"):
-                save_user(
-                    new_username, new_password, role, new_department, 
-                    new_age, new_year, st.session_state.ranked_preferences, new_gender, []
-                )
+        # Call the updated ranked preferences function
+        select_ranked_preferences(categories)
+
+        if st.button("Create Account"):
+            save_user(
+                new_username, new_password, role, new_department, 
+                new_age, new_year, st.session_state.ranked_preferences, new_gender, []
+            )
 
 
     # Main content - Recommendations
