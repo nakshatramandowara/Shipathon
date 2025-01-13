@@ -10,45 +10,6 @@ import os
 from dotenv import load_dotenv
 
 # Load environment variables
-load_dotenv()
-# Initialize session state variables
-if 'logged_in' not in st.session_state:
-    st.session_state.logged_in = False
-
-if 'username' not in st.session_state:
-    st.session_state.username = None
-
-if 'role' not in st.session_state:
-    st.session_state.role = None
-
-if 'register' not in st.session_state:
-    st.session_state.register = False
-    
-script_dir = Path(__file__).parent
-EVENTS_PATH = script_dir/"events.json"
-USER_DB_PATH = script_dir/"user_db.json"
-USER_PREFS_PATH = script_dir/"user_preferences.json"
-
-# MongoDB setup with error handling
-try:
-    from pymongo import MongoClient
-    MONGO_URI = os.getenv('MONGODB_URI')
-    if MONGO_URI:
-        client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
-        # Test the connection
-        client.server_info()
-        db = client['event_app']
-        users_collection = db['users']
-        preferences_collection = db['preferences']
-        events_collection = db['events']
-        USE_MONGO = True
-    else:
-        USE_MONGO = False
-except Exception as e:
-    USE_MONGO = False
-    if not st.session_state.get('mongo_error_shown'):
-        st.warning("Failed to connect to MongoDB. Using local JSON storage instead.")
-        st.session_state.mongo_error_shown = True
 
 @st.cache_data
 def start():
@@ -214,6 +175,46 @@ def select_ranked_preferences(categories):
 # Main app
 def main():
     st.title("Event Recommendation System")
+    load_dotenv()
+# Initialize session state variables
+if 'logged_in' not in st.session_state:
+    st.session_state.logged_in = False
+
+if 'username' not in st.session_state:
+    st.session_state.username = None
+
+if 'role' not in st.session_state:
+    st.session_state.role = None
+
+if 'register' not in st.session_state:
+    st.session_state.register = False
+    
+script_dir = Path(__file__).parent
+EVENTS_PATH = script_dir/"events.json"
+USER_DB_PATH = script_dir/"user_db.json"
+USER_PREFS_PATH = script_dir/"user_preferences.json"
+
+# MongoDB setup with error handling
+try:
+    from pymongo import MongoClient
+    MONGO_URI = os.getenv('MONGODB_URI')
+    if MONGO_URI:
+        client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+        # Test the connection
+        client.server_info()
+        db = client['event_app']
+        users_collection = db['users']
+        preferences_collection = db['preferences']
+        events_collection = db['events']
+        USE_MONGO = True
+    else:
+        USE_MONGO = False
+except Exception as e:
+    USE_MONGO = False
+    if not st.session_state.get('mongo_error_shown'):
+        st.warning("Failed to connect to MongoDB. Using local JSON storage instead.")
+        st.session_state.mongo_error_shown = True
+        
     init_storage()
 
     # Login/Register sidebar
