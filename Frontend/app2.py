@@ -193,6 +193,7 @@ def display_events_as_list(events):
     if should_rerun:
         st.rerun()
 
+
 import streamlit as st
 
 @st.cache_data
