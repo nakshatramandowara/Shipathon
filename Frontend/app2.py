@@ -195,34 +195,34 @@ def display_events_as_list(events):
 
 
 def select_ranked_preferences(categories):
-        
     st.subheader("Rank Your Interests")
     st.write("Rank the categories based on your interests. Drag the most important ones to the top.")
-    
-    # Initialize session state for validation
+
+    # Initialize session state for rankings if not already present
     if "ranked_preferences" not in st.session_state:
         st.session_state.ranked_preferences = [None] * len(categories)
-    
-    def validate_rankings():
-        """
-        Check for duplicates in the selected rankings and show a warning if any exist.
-        """
-        selected = [rank for rank in st.session_state.ranked_preferences if rank != "None"]
-        if len(selected) != len(set(selected)):
-            st.warning("Each category must be ranked uniquely or left as 'None'.")
-    
-    # Create dropdowns dynamically
-    for i, category in enumerate(categories, start=1):
-        st.session_state.ranked_preferences[i - 1] = st.selectbox(
-            f"Rank {i}:",
-            options=["None"] + categories,
-            key=f"rank_{i}",
-            on_change=validate_rankings
+
+    ranked_preferences = st.session_state.ranked_preferences
+
+    for i in range(len(categories)):
+        # Dynamically filter the options based on previous selections
+        available_options = ["None"] + [
+            category
+            for category in categories
+            if category not in ranked_preferences or ranked_preferences[i] == category
+        ]
+
+        # Create the selectbox
+        ranked_preferences[i] = st.selectbox(
+            f"Rank {i + 1}:",
+            options=available_options,
+            key=f"rank_{i + 1}",
         )
-    
-    # Run validation initially in case of pre-selected options
-    validate_rankings()
-    return st.session_state.ranked_preferences
+
+    st.write("Your Rankings:", ranked_preferences)
+    return ranked_preferences
+
+
 
 
 def load_env_and_setup():
