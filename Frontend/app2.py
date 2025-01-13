@@ -96,7 +96,7 @@ def verify_user(username, password):
     except Exception:
         return False
 
-
+@st.cache_data
 def get_user_preferences(username):
     try:
         prefs = st.session_state.preferences_collection.find_one({'name': username})
@@ -109,7 +109,7 @@ def load_events():
     with open(EVENTS_PATH, 'r') as f:
         return json.load(f)
         
-
+@st.cache_data
 def get_recommendations(user_prefs, events, filters=None):
     return er.get_user_preferences(user_prefs)
 
@@ -155,7 +155,7 @@ def select_ranked_preferences(categories):
         # Always return just the ranked preferences, even if incomplete
         return ranked_preferences
 
-@cache_resource
+@st.cache_resource
 def load_env_and_setup():
     load_dotenv()
     setup_mongodb()
