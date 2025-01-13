@@ -128,6 +128,38 @@ def load_events():
         
 def get_recommendations(user_prefs, events, filters=None):
     return er.get_user_preferences(user_prefs)
+    
+# Function to handle the attended events
+def add_event_to_past(event):
+    """Add only the event title to the user's past events list in the database."""
+    try:
+        username = st.session_state.username
+        event_title = event.get("Title", "Untitled Event")
+        
+        # Update the database to add the event title to past_events
+        st.session_state.preferences_collection.update_one(
+            {"name": username},
+            {"$addToSet": {"past_events": event_title}}
+        )
+        st.success(f"Event '{event_title}' marked as attended!")
+    except Exception as e:
+        st.error(f"Failed to mark event as attended: {e}")
+        
+def remove_event_from_past(event):
+    """Remove the event title from the user's past events list in the database."""
+    try:
+        username = st.session_state.username
+        event_title = event.get("Title", "Untitled Event")
+        
+        # Update the database to remove the event title from past_events
+        st.session_state.preferences_collection.update_one(
+            {"name": username},
+            {"$pull": {"past_events": event_title}}
+        )
+        st.success(f"Event '{event_title}' removed from attended list!")
+    except Exception as e:
+        st.error(f"Failed to remove event from attended list: {e}")
+
 
 def display_events_as_list(events):
     st.title("Event List")
@@ -160,26 +192,16 @@ def display_events_as_list(events):
 
         with col2:
             attended = st.checkbox("Attended", key=f"attended_{i}", value=is_attended)
-            if attended and not is_attended:  # If checkbox is checked and event isn't already in past_events
+            if attended and not is_attended:  # Add event when checked and not already attended
                 add_event_to_past(event)
-                st.experimental_rerun()  # Refresh the page to reflect the changes
+                st.experimental_rerun()
+            elif not attended and is_attended:  # Remove event when unchecked and already attended
+                remove_event_from_past(event)
+                st.experimental_rerun()
         st.markdown("---")
 
-# Function to handle the attended events
-def add_event_to_past(event):
-    """Add only the event title to the user's past events list in the database."""
-    try:
-        username = st.session_state.username
-        event_title = event.get("Title", "Untitled Event")
-        
-        # Update the database to add the event title to past_events
-        st.session_state.preferences_collection.update_one(
-            {"name": username},
-            {"$addToSet": {"past_events": event_title}}
-        )
-        st.success(f"Event '{event_title}' marked as attended!")
-    except Exception as e:
-        st.error(f"Failed to mark event as attended: {e}")
+
+
 
 
 def select_ranked_preferences(categories):
