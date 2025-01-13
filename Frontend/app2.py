@@ -200,7 +200,8 @@ def select_ranked_preferences(categories):
     st.write("Rank the categories based on your interests. Select items in order of preference.")
 
     # Initialize session state
-    initialize_preferences(categories)
+    if "ranked_preferences" not in st.session_state:
+        st.session_state.ranked_preferences = ["None"] * len(categories)
 
     # Local variables for tracking current run
     current_selections = set(st.session_state.current_selections)
