@@ -160,14 +160,17 @@ def display_events_as_list(events):
 
 # Function to handle the attended events
 def add_event_to_past(event):
-    """Add the event to the user's past events list in the database."""
+    """Add only the event title to the user's past events list in the database."""
     try:
         username = st.session_state.username
+        event_title = event.get("Title", "Untitled Event")
+        
+        # Update the database to add the event title to past_events
         st.session_state.preferences_collection.update_one(
             {"name": username},
-            {"$addToSet": {"past_events": event}}
+            {"$addToSet": {"past_events": event_title}}
         )
-        st.success(f"Event '{event.get('Title', 'Untitled Event')}' marked as attended!")
+        st.success(f"Event '{event_title}' marked as attended!")
     except Exception as e:
         st.error(f"Failed to mark event as attended: {e}")
 
