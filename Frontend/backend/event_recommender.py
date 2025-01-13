@@ -18,6 +18,7 @@ def ensure_initialization(name="my_events"):
     """
     global _is_initialized
     global force_reinit
+    force_reinit=True
     if not _is_initialized or force_reinit:
         # Check if the collection exists
         collections = client.get_collections().collections
@@ -26,6 +27,7 @@ def ensure_initialization(name="my_events"):
                 # Delete the existing collection
                 client.delete_collection(name)
                 print(f"Collection '{name}' deleted.")
+                force_reinit=False
             else:
                 print(f"Collection '{name}' already exists.")
                 return  # Skip reinitialization if no force
@@ -48,10 +50,10 @@ def ensure_initialization(name="my_events"):
         points = []
         tags_weight = 100.0
         for idx, doc in enumerate(documents):
-            values_string = f"{doc['Title']} {doc['location']} {doc['summary']} {doc['target_audience']}"
+            values_string = f"{doc['Title']}  {doc['summary']} {doc['target_audience']}"
             vector = encoder.encode(values_string).tolist()
             tags_vector = encoder.encode(' '.join(doc["Tags"])).tolist()
-            vector = [(a + b * tags_weight) for a, b in zip(vector, tags_vector)]
+            vector = [(a + b*tags_weight) for a, b in zip(vector, tags_vector)]
             
             points.append(models.PointStruct(
                 id=idx,
