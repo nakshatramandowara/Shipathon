@@ -17,7 +17,7 @@ def ensure_initialization(name="my_events"):
     """
     global _is_initialized
     
-    if not _is_initialized:
+    if True:
         # Initialize collection
         collections = client.get_collections().collections
         if name not in [col.name for col in collections]:
