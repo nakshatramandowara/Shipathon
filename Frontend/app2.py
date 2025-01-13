@@ -8,54 +8,48 @@ from backend import event_recommender as er
 import os
 from dotenv import load_dotenv
 
-# Global variables and configuration
+# Initialize paths
 script_dir = Path(__file__).parent
 EVENTS_PATH = script_dir/"events.json"
 USER_DB_PATH = script_dir/"user_db.json"
 USER_PREFS_PATH = script_dir/"user_preferences.json"
-
-# Initialize global variables
-USE_MONGO = False
-users_collection = None
-preferences_collection = None
-events_collection = None
 
 @st.cache_data
 def start():
     er.ensure_initialization("my_events")
 
 def setup_mongodb():
-    global USE_MONGO, users_collection, preferences_collection, events_collection
-    
-    try:
-        from pymongo import MongoClient
-        MONGO_URI = os.getenv('MONGODB_URI')
-        if MONGO_URI:
-            client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
-            # Test the connection
-            client.server_info()
-            db = client['event_app']
-            users_collection = db['users']
-            preferences_collection = db['preferences']
-            events_collection = db['events']
-            USE_MONGO = True
-            return True
-    except Exception as e:
-        USE_MONGO = False
-        if not st.session_state.get('mongo_error_shown'):
-            st.warning("Failed to connect to MongoDB. Using local JSON storage instead.")
-            st.session_state.mongo_error_shown = True
-        return False
-
-# Initialize storage
-def init_storage():
-    global USE_MONGO
-    if USE_MONGO:
+    """Setup MongoDB connection and store connection status in session state"""
+    if 'mongo_setup_done' not in st.session_state:
         try:
-            # Initialize MongoDB collections
-            users_collection.create_index('username', unique=True)
-            preferences_collection.create_index('name', unique=True)
-            events_collection.create_index('id', unique=True)
+            from pymongo import MongoClient
+            MONGO_URI = os.getenv('MONGODB_URI')
+            if MONGO_URI:
+                client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+                client.server_info()  # Test connection
+                db = client['event_app']
+                
+                # Store collections in session state
+                st.session_state.users_collection = db['users']
+                st.session_state.preferences_collection = db['preferences']
+                st.session_state.events_collection = db['events']
+                st.session_state.use_mongo = True
+                st.session_state.mongo_setup_done = True
+            else:
+                st.session_state.use_mongo = False
+        except Exception as e:
+            st.session_state.use_mongo = False
+            if not st.session_state.get('mongo_error_shown'):
+                st.warning("Failed to connect to MongoDB. Using local JSON storage instead.")
+                st.session_state.mongo_error_shown = True
+
+def init_storage():
+    """Initialize storage (MongoDB indexes and JSON files)"""
+    if st.session_state.use_mongo:
+        try:
+            st.session_state.users_collection.create_index('username', unique=True)
+            st.session_state.preferences_collection.create_index('name', unique=True)
+            st.session_state.events_collection.create_index('id', unique=True)
         except Exception as e:
             st.error(f"Error initializing MongoDB indexes: {str(e)}")
     
@@ -87,25 +81,24 @@ def save_user(username, password, role, department, age, year, preferences, gend
         "past_events": past_events
     }
     
-    if USE_MONGO:
+    if st.session_state.use_mongo:
         try:
-            users_collection.update_one(
+            st.session_state.users_collection.update_one(
                 {'username': username},
                 {'$set': user_data},
                 upsert=True
             )
-            preferences_collection.update_one(
+            st.session_state.preferences_collection.update_one(
                 {'name': username},
                 {'$set': preferences_data},
                 upsert=True
             )
         except Exception as e:
             st.error(f"MongoDB Error: {str(e)}")
-            
-            USE_MONGO = False
+            st.session_state.use_mongo = False
     
-    # Fallback to JSON if MongoDB fails
-    if not USE_MONGO:
+    # Fallback to JSON
+    if not st.session_state.use_mongo:
         with open(USER_DB_PATH, 'r+') as f:
             users = json.load(f)
             users[username] = user_data
@@ -119,9 +112,9 @@ def save_user(username, password, role, department, age, year, preferences, gend
             json.dump(prefs, f)
 
 def verify_user(username, password):
-    if USE_MONGO:
+    if st.session_state.use_mongo:
         try:
-            user = users_collection.find_one({
+            user = st.session_state.users_collection.find_one({
                 'username': username,
                 'password': hash_password(password)
             })
@@ -135,9 +128,9 @@ def verify_user(username, password):
         return username in users and users[username]['password'] == hash_password(password)
 
 def get_user_preferences(username):
-    if USE_MONGO:
+    if st.session_state.use_mongo:
         try:
-            prefs = preferences_collection.find_one({'name': username})
+            prefs = st.session_state.preferences_collection.find_one({'name': username})
             if prefs:
                 return prefs
         except Exception:
@@ -149,17 +142,15 @@ def get_user_preferences(username):
         return prefs.get(username, {})
 
 def load_events():
-    # Fallback to JSON
     with open(EVENTS_PATH, 'r') as f:
         return json.load(f)
 
 def get_recommendations(user_prefs, events, filters=None):
-    print(user_prefs)
     return er.get_user_preferences(user_prefs)
 
+# Rest of your functions remain the same
 def display_events_as_list(events):
     st.title("Event List")
-    
     for event in events:
         st.markdown(f"### **{event.get('Title', 'Untitled Event')}**")
         date = event.get("date", "N/A")
@@ -173,8 +164,8 @@ def display_events_as_list(events):
 
 def select_ranked_preferences(categories):
     st.subheader("Rank Your Interests")
-    st.write("Rank the categories based on your interests. Drag the most important ones to the top. You can leave some ranks as 'None' if not interested in those categories.")
-
+    st.write("Rank the categories based on your interests. Drag the most important ones to the top.")
+    
     ranked_preferences = []
     none_count = 0
     with st.form("ranked_preferences"):
@@ -210,12 +201,14 @@ def main():
         st.session_state.role = None
     if 'register' not in st.session_state:
         st.session_state.register = False
+    if 'use_mongo' not in st.session_state:
+        st.session_state.use_mongo = False
 
-    # Setup MongoDB connection
+    # Setup MongoDB and initialize storage
     setup_mongodb()
     init_storage()
 
-    # Login/Register sidebar
+    # Rest of your main function remains the same
     with st.sidebar:
         if not st.session_state.logged_in:
             st.subheader("Login")
