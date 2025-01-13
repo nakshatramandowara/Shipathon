@@ -1,151 +1,97 @@
-
 import streamlit as st
 import pandas as pd
+import json
 from datetime import datetime
 import hashlib
 from pathlib import Path
-import json
 from backend import event_recommender as er
-import os
-from dotenv import load_dotenv
-
-# Load environment variables
-load_dotenv()
 
 script_dir = Path(__file__).parent
 EVENTS_PATH = script_dir/"events.json"
-USER_DB_PATH = script_dir/"user_db.json"
-USER_PREFS_PATH = script_dir/"user_preferences.json"
-
-# MongoDB setup with error handling
-try:
-    from pymongo import MongoClient
-    MONGO_URI = os.getenv('MONGODB_URI')
-    if MONGO_URI:
-        client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
-        # Test the connection
-        client.server_info()
-        db = client['event_app']
-        users_collection = db['users']
-        preferences_collection = db['preferences']
-        events_collection = db['events']
-        USE_MONGO = True
-    else:
-        USE_MONGO = False
-except Exception as e:
-    USE_MONGO = False
-    if not st.session_state.get('mongo_error_shown'):
-        st.warning("Failed to connect to MongoDB. Using local JSON storage instead.")
-        st.session_state.mongo_error_shown = True
-
 @st.cache_data
+
 def start():
     er.ensure_initialization("my_events")
 
-# Initialize storage
-def init_storage():
-    if USE_MONGO:
-        try:
-            # Initialize MongoDB collections
-            users_collection.create_index('username', unique=True)
-            preferences_collection.create_index('name', unique=True)
-            events_collection.create_index('id', unique=True)
-        except Exception as e:
-            st.error(f"Error initializing MongoDB indexes: {str(e)}")
-    
-    # Always ensure JSON files exist as fallback
-    for path in [USER_DB_PATH, USER_PREFS_PATH, EVENTS_PATH]:
-        if not path.exists():
-            with open(path, 'w') as f:
-                json.dump({}, f)
+    # with open(EVENTS_PATH, 'r') as f:
+    #     documents = json.load(f)
 
+    # for idx, doc in enumerate(documents):
+    #     doc["id"] = idx  
+    #     result = er.add_event_to_database(doc)
+
+start()
+
+# Initialize session state variables
+if 'logged_in' not in st.session_state:
+    st.session_state.logged_in = False
+if 'username' not in st.session_state:
+    st.session_state.username = None
+
+# File paths
+USER_DB_PATH = script_dir/"user_db.json"
+USER_PREFS_PATH = script_dir/"user_preferences.json"
+
+# Initialize storage files if they don't exist
+def init_storage():
+    if not USER_DB_PATH.exists():
+        with open(USER_DB_PATH, 'w') as f:
+            json.dump({}, f)
+    
+    if not USER_PREFS_PATH.exists():
+        with open(USER_PREFS_PATH, 'w') as f:
+            json.dump({}, f)
+    
+    if not EVENTS_PATH.exists():
+        sample_events = {}
+        with open(EVENTS_PATH, 'w') as f:
+            json.dump(sample_events, f)
+
+# User authentication functions
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
 def save_user(username, password, role, department, age, year, preferences, gender, past_events):
-    user_data = {
-        'username': username,
-        'password': hash_password(password),
-        'created_at': datetime.now().isoformat(),
-        'role': role
-    }
+    with open(USER_DB_PATH, 'r+') as f:
+        users = json.load(f)
+        users[username] = {
+            'password': hash_password(password),
+            'created_at': datetime.now().isoformat(),
+            'role': role
+        }
+        f.seek(0)
+        json.dump(users, f)
     
-    preferences_data = {
-        "name": username,
-        "gender": gender,
-        "role": role,
-        "age": age,
-        "department": department,
-        "year": year,
-        "interests": [(len(preferences)-i)*preferences[i] for i in range(len(preferences))],
-        "past_events": past_events
-    }
-    
-    if USE_MONGO:
-        try:
-            users_collection.update_one(
-                {'username': username},
-                {'$set': user_data},
-                upsert=True
-            )
-            preferences_collection.update_one(
-                {'name': username},
-                {'$set': preferences_data},
-                upsert=True
-            )
-        except Exception as e:
-            st.error(f"MongoDB Error: {str(e)}")
-            USE_MONGO = False
-    
-    # Fallback to JSON if MongoDB fails
-    if not USE_MONGO:
-        with open(USER_DB_PATH, 'r+') as f:
-            users = json.load(f)
-            users[username] = user_data
-            f.seek(0)
-            json.dump(users, f)
-        
-        with open(USER_PREFS_PATH, 'r+') as f:
-            prefs = json.load(f)
-            prefs[username] = preferences_data
-            f.seek(0)
-            json.dump(prefs, f)
+    with open(USER_PREFS_PATH, 'r+') as f:
+        prefs = json.load(f)
+        prefs[username] = {
+            "name": username,
+            "gender": gender,
+            "role": role,
+            "age": age,
+            "department": department,
+            "year": year,
+            "interests": [(len(preferences)-i)*preferences[i] for i in range(len(preferences))],
+            "past_events": past_events
+        }
+        f.seek(0)
+        json.dump(prefs, f)
 
 def verify_user(username, password):
-    if USE_MONGO:
-        try:
-            user = users_collection.find_one({
-                'username': username,
-                'password': hash_password(password)
-            })
-            return user is not None
-        except Exception:
-            pass
-    
-    # Fallback to JSON
     with open(USER_DB_PATH, 'r') as f:
         users = json.load(f)
-        return username in users and users[username]['password'] == hash_password(password)
+        if username in users and users[username]['password'] == hash_password(password):
+            return True
+    return False
 
 def get_user_preferences(username):
-    if USE_MONGO:
-        try:
-            prefs = preferences_collection.find_one({'name': username})
-            if prefs:
-                return prefs
-        except Exception:
-            pass
-    
-    # Fallback to JSON
     with open(USER_PREFS_PATH, 'r') as f:
         prefs = json.load(f)
         return prefs.get(username, {})
 
 def load_events():
-      # Fallback to JSON
     with open(EVENTS_PATH, 'r') as f:
         return json.load(f)
-
 
 # Recommendation system
 def get_recommendations(user_prefs, events, filters=None):
