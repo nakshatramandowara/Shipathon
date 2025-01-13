@@ -236,11 +236,8 @@ def select_ranked_preferences(categories):
             key=f"rank_{i + 1}"
         )
         
-        # Update selections only if changed
-        if selected != current_selection:
-            new_rankings[i] = selected
-            # Force rerun to update available options
-            st.rerun()
+     
+     
     
     # Use cached function to get final rankings
     final_rankings = get_final_rankings(tuple(new_rankings))
