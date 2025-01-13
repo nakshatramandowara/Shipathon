@@ -155,7 +155,7 @@ def select_ranked_preferences(categories):
         # Always return just the ranked preferences, even if incomplete
         return ranked_preferences
 
-
+@cache_resource
 def load_env_and_setup():
     load_dotenv()
     setup_mongodb()
