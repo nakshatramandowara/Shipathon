@@ -195,36 +195,32 @@ def display_events_as_list(events):
 
 
 def select_ranked_preferences(categories):
+    """Interactive ranking UI for categories."""
     st.subheader("Rank Your Interests")
     st.write("Rank the categories based on your interests. Select items in order of preference.")
-    
+
     # Initialize session state
-    if "ranked_preferences" not in st.session_state:
-        st.session_state.ranked_preferences = ["None"] * len(categories)
-        
-    # Keep track of selections in this run to prevent duplicates
-    current_selections = set()
+    initialize_preferences(categories)
+
+    # Local variables for tracking current run
+    current_selections = set(st.session_state.current_selections)
     new_rankings = ["None"] * len(categories)
-    
+
     # Create selectboxes for each rank
     for i in range(len(categories)):
         # Get current selection for this position
         current_selection = st.session_state.ranked_preferences[i]
-        
-        # Build available options
-        available_options = ["None"]
-        for category in categories:
-            # Category is available if it's either:
-            # 1. Not yet selected in this run
-            # 2. Currently selected in this position
-            if category not in current_selections or category == current_selection:
-                available_options.append(category)
-                
-        # Find the correct default index
-        default_index = 0
-        if current_selection in available_options:
-            default_index = available_options.index(current_selection)
-            
+
+        # Build available options dynamically
+        available_options = ["None"] + [
+            category
+            for category in categories
+            if category not in current_selections or category == current_selection
+        ]
+
+        # Determine default index
+        default_index = available_options.index(current_selection) if current_selection in available_options else 0
+
         # Create the selectbox
         selected = st.selectbox(
             f"Rank {i + 1}:",
@@ -232,25 +228,24 @@ def select_ranked_preferences(categories):
             index=default_index,
             key=f"rank_{i + 1}"
         )
-        
+
         # Update tracking sets and lists
         if selected != "None":
             current_selections.add(selected)
         new_rankings[i] = selected
-    
-    # Update session state only after all selections are processed
+
+    # Update session state only if rankings change
     if new_rankings != st.session_state.ranked_preferences:
         st.session_state.ranked_preferences = new_rankings
-    
-    # Return only non-None rankings
+        st.session_state.current_selections = current_selections
+
+    # Display final rankings
     final_rankings = [rank for rank in new_rankings if rank != "None"]
-    
-    # Display current rankings
     if final_rankings:
         st.write("\nYour current rankings:")
         for i, rank in enumerate(final_rankings, 1):
             st.write(f"{i}. {rank}")
-    
+
     return final_rankings
 
 
