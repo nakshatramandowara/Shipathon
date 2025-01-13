@@ -18,7 +18,7 @@ USER_PREFS_PATH = script_dir / "user_preferences.json"
 # def start():
 #     er.ensure_initialization("my_events")
 
-@st.cache_data
+# @st.cache_data
 def setup_mongodb():
     """Setup MongoDB connection."""
     from pymongo import MongoClient
