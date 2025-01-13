@@ -14,10 +14,11 @@ EVENTS_PATH = script_dir / "events.json"
 USER_DB_PATH = script_dir / "user_db.json"
 USER_PREFS_PATH = script_dir / "user_preferences.json"
 
-@st.cache_data
-def start():
-    er.ensure_initialization("my_events")
+# @st.cache_data
+# def start():
+#     er.ensure_initialization("my_events")
 
+@st.cache_data
 def setup_mongodb():
     """Setup MongoDB connection."""
     from pymongo import MongoClient
