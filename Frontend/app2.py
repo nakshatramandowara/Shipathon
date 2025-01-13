@@ -223,7 +223,7 @@ def main():
         
         gender = ["Male", "Female", "Other"]
         departments = ["Physics", "Maths", "Electrical", "Computer Science", "Chemical", "Mechanical", "Textile"]
-    
+        categories = ["Technology", "Entertainment", "Sports", "Business", "Cultural"]
         role = st.selectbox("Choose Role", options=roles)
         if role == "Student":
             new_department = st.selectbox("Choose Department", options=departments)
@@ -232,18 +232,18 @@ def main():
             new_gender = st.selectbox("Choose Gender", options=gender)
     
             # Use the new ranked preferences function
-    categories = ["Technology", "Entertainment", "Sports", "Business", "Cultural"]
-    ranked_preferences = select_ranked_preferences(categories)
+        
+        ranked_preferences = select_ranked_preferences(categories)
     
-    if st.button("Create Account"):
-        preferences = ranked_preferences if ranked_preferences else [""]
-        save_user(
-            new_username, new_password, role, new_department, 
-            new_age, new_year, preferences, new_gender, []
-        )
-        st.success("Account created successfully!")
-        st.session_state.register = False
-        st.rerun()
+        if st.button("Create Account"):
+            preferences = ranked_preferences if ranked_preferences else [""]
+            save_user(
+                new_username, new_password, role, new_department, 
+                new_age, new_year, preferences, new_gender, []
+            )
+            st.success("Account created successfully!")
+            st.session_state.register = False
+            st.rerun()
 
     # Main content - Recommendations
     if st.session_state.logged_in:
