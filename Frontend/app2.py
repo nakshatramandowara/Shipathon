@@ -7,6 +7,7 @@ import json
 from backend import event_recommender as er
 import os
 from dotenv import load_dotenv
+from pymongo import MongoClient
 
 # Initialize paths
 script_dir = Path(__file__).parent
@@ -21,22 +22,24 @@ USER_PREFS_PATH = script_dir / "user_preferences.json"
 # @st.cache_data
 def setup_mongodb():
     """Setup MongoDB connection."""
-    from pymongo import MongoClient
-    MONGO_URI = os.getenv('MONGODB_URI')
-    if not MONGO_URI:
-        raise SystemExit("Error: MongoDB URI not found in environment variables. Exiting.")
-    try:
-        client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
-        client.server_info()  # Test connection
-        db = client['event_app']
-
+    @st.cache_resource
+    def foo()
+        MONGO_URI = os.getenv('MONGODB_URI')
+        if not MONGO_URI:
+            raise SystemExit("Error: MongoDB URI not found in environment variables. Exiting.")
+        try:
+            client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+            client.server_info()  # Test connection
+            db = client['event_app']
+        except Exception as e:
+            raise SystemExit(f"Error: Failed to connect to MongoDB. Details: {e}. Exiting.")
+    foo()
         # Store collections in session state
-        st.session_state.users_collection = db['users']
-        st.session_state.preferences_collection = db['preferences']
-        st.session_state.events_collection = db['events']
-        st.session_state.mongo_setup_done = True
-    except Exception as e:
-        raise SystemExit(f"Error: Failed to connect to MongoDB. Details: {e}. Exiting.")
+    st.session_state.users_collection = db['users']
+    st.session_state.preferences_collection = db['preferences']
+    st.session_state.events_collection = db['events']
+    st.session_state.mongo_setup_done = True
+    
 
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
