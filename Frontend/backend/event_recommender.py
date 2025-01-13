@@ -1,5 +1,5 @@
 from pathlib import Path
-script_dir = Path(__file__).parent
+script_dir = Path(__file__).parent.parent
 
 from qdrant_client import models, QdrantClient
 from sentence_transformers import SentenceTransformer
