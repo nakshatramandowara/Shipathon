@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 from datetime import datetime
@@ -9,14 +8,48 @@ from backend import event_recommender as er
 import os
 from dotenv import load_dotenv
 
-# Load environment variables
+# Global variables and configuration
+script_dir = Path(__file__).parent
+EVENTS_PATH = script_dir/"events.json"
+USER_DB_PATH = script_dir/"user_db.json"
+USER_PREFS_PATH = script_dir/"user_preferences.json"
+
+# Initialize global variables
+USE_MONGO = False
+users_collection = None
+preferences_collection = None
+events_collection = None
 
 @st.cache_data
 def start():
     er.ensure_initialization("my_events")
 
+def setup_mongodb():
+    global USE_MONGO, users_collection, preferences_collection, events_collection
+    
+    try:
+        from pymongo import MongoClient
+        MONGO_URI = os.getenv('MONGODB_URI')
+        if MONGO_URI:
+            client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+            # Test the connection
+            client.server_info()
+            db = client['event_app']
+            users_collection = db['users']
+            preferences_collection = db['preferences']
+            events_collection = db['events']
+            USE_MONGO = True
+            return True
+    except Exception as e:
+        USE_MONGO = False
+        if not st.session_state.get('mongo_error_shown'):
+            st.warning("Failed to connect to MongoDB. Using local JSON storage instead.")
+            st.session_state.mongo_error_shown = True
+        return False
+
 # Initialize storage
 def init_storage():
+    global USE_MONGO
     if USE_MONGO:
         try:
             # Initialize MongoDB collections
@@ -68,6 +101,7 @@ def save_user(username, password, role, department, age, year, preferences, gend
             )
         except Exception as e:
             st.error(f"MongoDB Error: {str(e)}")
+            global USE_MONGO
             USE_MONGO = False
     
     # Fallback to JSON if MongoDB fails
@@ -115,20 +149,15 @@ def get_user_preferences(username):
         return prefs.get(username, {})
 
 def load_events():
-      # Fallback to JSON
+    # Fallback to JSON
     with open(EVENTS_PATH, 'r') as f:
         return json.load(f)
 
-
-# Recommendation system
 def get_recommendations(user_prefs, events, filters=None):
     print(user_prefs)
     return er.get_user_preferences(user_prefs)
 
 def display_events_as_list(events):
-    """
-    Displays a list of events in Streamlit with a formatted layout.
-    """
     st.title("Event List")
     
     for event in events:
@@ -141,7 +170,7 @@ def display_events_as_list(events):
         summary = event.get("summary", "N/A")
         st.markdown(f"<p style='font-size: smaller;'>{summary}</p>", unsafe_allow_html=True)
         st.markdown("---")
-# Ranked interest selection
+
 def select_ranked_preferences(categories):
     st.subheader("Rank Your Interests")
     st.write("Rank the categories based on your interests. Drag the most important ones to the top. You can leave some ranks as 'None' if not interested in those categories.")
@@ -155,7 +184,6 @@ def select_ranked_preferences(categories):
                 options=["None"] + categories,
                 key=f"rank_{i}",
             )
-            # Allow multiple "None" and ignore it for rankings
             if selected == "None":
                 none_count += 1
             elif selected not in ranked_preferences:
@@ -166,55 +194,25 @@ def select_ranked_preferences(categories):
             if len(ranked_preferences) + none_count != len(categories):
                 st.warning("Please rank all categories uniquely, or leave them as 'None'.")
             else:
-                return ranked_preferences  # Only return valid preferences
+                return ranked_preferences
     return None
 
-
-
-
-# Main app
 def main():
     st.title("Event Recommendation System")
     load_dotenv()
-# Initialize session state variables
+    
+    # Initialize session state variables
     if 'logged_in' not in st.session_state:
         st.session_state.logged_in = False
-
     if 'username' not in st.session_state:
         st.session_state.username = None
-
     if 'role' not in st.session_state:
         st.session_state.role = None
-
     if 'register' not in st.session_state:
         st.session_state.register = False
-    
-    script_dir = Path(__file__).parent
-    EVENTS_PATH = script_dir/"events.json"
-    USER_DB_PATH = script_dir/"user_db.json"
-    USER_PREFS_PATH = script_dir/"user_preferences.json"
 
-# MongoDB setup with error handling
-    try:
-        from pymongo import MongoClient
-        MONGO_URI = os.getenv('MONGODB_URI')
-        if MONGO_URI:
-            client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
-        # Test the connection
-            client.server_info()
-            db = client['event_app']
-            users_collection = db['users']
-            preferences_collection = db['preferences']
-            events_collection = db['events']
-            USE_MONGO = True
-        else:
-            USE_MONGO = False
-    except Exception as e:
-        USE_MONGO = False
-        if not st.session_state.get('mongo_error_shown'):
-            st.warning("Failed to connect to MongoDB. Using local JSON storage instead.")
-            st.session_state.mongo_error_shown = True
-        
+    # Setup MongoDB connection
+    setup_mongodb()
     init_storage()
 
     # Login/Register sidebar
@@ -248,49 +246,17 @@ def main():
                 st.session_state.role = None
                 st.rerun()
 
-    # # Registration form
-    # if not st.session_state.logged_in and st.session_state.get('register', False):
-    #     st.subheader("Register New Account")
-    #     new_username = st.text_input("Choose Username", key="reg_username")
-    #     new_password = st.text_input("Choose Password", type="password", key="reg_password")
-        
-    #     roles = ['Student', "Professor","Organiser"]  
-    #     categories = ['Technology', 'Entertainment', 'Sports', 'Business', 'Cultural']
-    #     gender = ["Male", "Female","Other"]
-    #     departments = ["Physics", "Maths", "Electrical","Computer Science","Chemical","Mechanical","Textile"]
-
-    #     role = st.selectbox("Choose Role", options=roles)
-    #     if role == 'Student':
-    #         new_department = st.selectbox("Choose department", options=departments)
-    #         new_age = st.number_input("Enter Age", min_value=1, max_value=100, value=20, step=1,key="reg_age")
-    #         new_year = st.number_input("Enter your degree-year",min_value=1, max_value=10, value=2, step=1, key="reg_year")
-    #         new_gender = st.selectbox("choose gender", options=gender)
-
-    #         st.subheader("Preferences")
-    #         selected_categories = st.multiselect(
-    #             "Select your interests",
-    #             options=categories
-    #         )
-        
-    #     if st.button("Create Account"):
-    #         preferences = {
-    #             'interested_categories': selected_categories
-    #         }
-    #         save_user(new_username, new_password, role, new_department, new_age, new_year, preferences["interested_categories"], new_gender, [])
-    #         st.success("Account created successfully!")
-    #         st.session_state.register = False
-    #         st.rerun()
-    # Updated registration form to include ranked preferences
+    # Registration form
     if not st.session_state.logged_in and st.session_state.get("register", False):
         st.subheader("Register New Account")
         new_username = st.text_input("Choose Username", key="reg_username")
         new_password = st.text_input("Choose Password", type="password", key="reg_password")
         
         roles = ["Student", "Professor", "Organiser"]  
-        
         gender = ["Male", "Female", "Other"]
         departments = ["Physics", "Maths", "Electrical", "Computer Science", "Chemical", "Mechanical", "Textile"]
         categories = ["Technology", "Entertainment", "Sports", "Business", "Cultural"]
+        
         role = st.selectbox("Choose Role", options=roles)
         if role == "Student":
             new_department = st.selectbox("Choose Department", options=departments)
@@ -298,25 +264,22 @@ def main():
             new_year = st.number_input("Enter Degree-Year", min_value=1, max_value=10, value=2, step=1, key="reg_year")
             new_gender = st.selectbox("Choose Gender", options=gender)
     
-            # Use the new ranked preferences function
-        
-        ranked_preferences = select_ranked_preferences(categories)
+            ranked_preferences = select_ranked_preferences(categories)
     
-        if st.button("Create Account"):
-            preferences = ranked_preferences if ranked_preferences else [""]
-            save_user(
-                new_username, new_password, role, new_department, 
-                new_age, new_year, preferences, new_gender, []
-            )
-            st.success("Account created successfully!")
-            st.session_state.register = False
-            st.rerun()
+            if st.button("Create Account"):
+                preferences = ranked_preferences if ranked_preferences else [""]
+                save_user(
+                    new_username, new_password, role, new_department, 
+                    new_age, new_year, preferences, new_gender, []
+                )
+                st.success("Account created successfully!")
+                st.session_state.register = False
+                st.rerun()
 
     # Main content - Recommendations
     if st.session_state.logged_in:
         st.subheader("Event Recommendations")
         
-        # Filters
         with st.expander("Filters"):
             date_range = st.date_input(
                 "Date Range",
@@ -324,16 +287,14 @@ def main():
                 key="date_filter"
             )
             
-            event_types = ['All', 'Conference', 'Festival', 'Workshop','Competition']
+            event_types = ['All', 'Conference', 'Festival', 'Workshop', 'Competition']
             selected_type = st.selectbox("Event Type", event_types)
             
-        # Apply filters
         filters = {
             'date_range': [d.isoformat() for d in date_range] if len(date_range) == 2 else None,
             'event_type': selected_type if selected_type != 'All' else None
         }
         
-        # Get and display recommendations
         user_prefs = get_user_preferences(st.session_state.username)
         events = load_events()
         recommended_events = get_recommendations(user_prefs, events, filters)
