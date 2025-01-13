@@ -9,7 +9,6 @@ import json
 encoder = SentenceTransformer("all-MiniLM-L6-v2")
 client = QdrantClient(":memory:")
 _is_initialized = False
-force_reinit=True
 
 def ensure_initialization(name="my_events"):
     """
@@ -17,31 +16,24 @@ def ensure_initialization(name="my_events"):
     Uses a global flag to prevent multiple initializations.
     """
     global _is_initialized
-    global force_reinit
-    if not _is_initialized or force_reinit:
-        # Check if the collection exists
+    
+    if not _is_initialized:
+        # Initialize collection
         collections = client.get_collections().collections
-        if name in [col.name for col in collections]:
-            if force_reinit:
-                # Delete the existing collection
-                client.delete_collection(name)
-                print(f"Collection '{name}' deleted.")
-            else:
-                print(f"Collection '{name}' already exists.")
-                return  # Skip reinitialization if no force
-        
-        # Create a new collection
-        client.create_collection(
-            collection_name=name,
-            vectors_config=models.VectorParams(
-                size=encoder.get_sentence_embedding_dimension(),
-                distance=models.Distance.COSINE,
-            ),
-        )
+        if name not in [col.name for col in collections]:
+            client.create_collection(
+                collection_name=name,
+                vectors_config=models.VectorParams(
+                    size=encoder.get_sentence_embedding_dimension(),
+                    distance=models.Distance.COSINE,
+                ),
+            )
         
         # Load and add events
-        events_file = script_dir / "events.json"
+        events_file = script_dir/"events.json"
+    
         with open(events_file, 'r') as f:
+            print(f)
             documents = json.load(f)
         
         # Create points list for batch upload
@@ -51,7 +43,8 @@ def ensure_initialization(name="my_events"):
             values_string = f"{doc['Title']} {doc['location']} {doc['summary']} {doc['target_audience']}"
             vector = encoder.encode(values_string).tolist()
             tags_vector = encoder.encode(' '.join(doc["Tags"])).tolist()
-            vector = [(a + b * tags_weight) for a, b in zip(vector, tags_vector)]
+            vector = [(a + b*tags_weight) for a,b in zip(vector, tags_vector)]
+            
             
             points.append(models.PointStruct(
                 id=idx,
@@ -67,7 +60,7 @@ def ensure_initialization(name="my_events"):
         
         _is_initialized = True
         print(f"Initialized with {len(points)} events")
-      
+            
        
 def get_user_preferences(user_data,
     name_weight=0.0,
