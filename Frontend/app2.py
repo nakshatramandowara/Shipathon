@@ -203,11 +203,12 @@ def select_ranked_preferences(categories):
         st.session_state.ranked_preferences = [None] * len(categories)
 
     for i in range(len(categories)):
-        # Dynamically filter the options based on previous selections
+        # Ensure the current selection is always included in the options
+        current_selection = st.session_state.ranked_preferences[i]
         available_options = ["None"] + [
             category
             for category in categories
-            if category not in st.session_state.ranked_preferences or st.session_state.ranked_preferences[i] == category
+            if category not in st.session_state.ranked_preferences or category == current_selection
         ]
 
         # Create the selectbox with persistent state
@@ -218,8 +219,8 @@ def select_ranked_preferences(categories):
         )
 
         # Update session state
-        if st.session_state.ranked_preferences[i] != selected_option:
-            st.session_state.ranked_preferences[i] = selected_option
+        st.session_state.ranked_preferences[i] = selected_option
+
 
 
 
