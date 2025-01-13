@@ -232,10 +232,10 @@ def main():
             new_gender = st.selectbox("Choose Gender", options=gender)
     
             # Use the new ranked preferences function
-        ranked_preferences = select_ranked_preferences(categories)
+    ranked_preferences = select_ranked_preferences(categories)
     
     if st.button("Create Account"):
-        preferences = ranked_preferences 
+        preferences = ranked_preferences if ranked_preferences else [""]
         save_user(
             new_username, new_password, role, new_department, 
             new_age, new_year, preferences, new_gender, []
