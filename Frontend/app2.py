@@ -242,10 +242,6 @@ def select_ranked_preferences(categories):
             # Force rerun to update available options
             st.rerun()
     
-    # Update session state only if rankings changed
-    if new_rankings != st.session_state.ranked_preferences:
-        st.session_state.ranked_preferences = new_rankings
-    
     # Use cached function to get final rankings
     final_rankings = get_final_rankings(tuple(new_rankings))
     
