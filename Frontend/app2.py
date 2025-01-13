@@ -196,16 +196,16 @@ def display_events_as_list(events):
 
 @st.cache_data
 def get_available_options(categories, current_selections, current_selection):
-    """Cache the computation of available options for each dropdown"""
+    """Cache the computation of available options for each dropdown."""
     return ["None"] + [
         category for category in categories 
         if category == current_selection or category not in current_selections
     ]
 
 @st.cache_data
-def get_final_rankings(rankings):
-    """Cache the computation of final rankings list"""
-    return [rank for rank in rankings if rank != "None"]
+def compute_final_rankings(ranked_preferences):
+    """Cache the computation of final rankings list."""
+    return [rank for rank in ranked_preferences if rank != "None"]
 
 def select_ranked_preferences(categories):
     st.subheader("Rank Your Interests")
@@ -215,36 +215,35 @@ def select_ranked_preferences(categories):
     if "ranked_preferences" not in st.session_state:
         st.session_state.ranked_preferences = ["None"] * len(categories)
     
-    # Pre-calculate current selections once
-    current_selections = frozenset(pref for pref in st.session_state.ranked_preferences if pref != "None")
-    new_rankings = st.session_state.ranked_preferences.copy()
-    
     for i in range(len(categories)):
-        current_selection = new_rankings[i]
+        # Dynamically calculate current selections
+        current_selections = set(pref for pref in st.session_state.ranked_preferences if pref != "None")
+        current_selection = st.session_state.ranked_preferences[i]
         
         # Use cached function to get available options
         available_options = get_available_options(
-            tuple(categories),  # Convert to tuple since lists aren't hashable
-            current_selections,
-            current_selection
+            categories,  # List of categories
+            current_selections,  # Set of current selections
+            current_selection  # Current selection for this dropdown
         )
         
-        selected = st.selectbox(
+        # Render dropdown and update state
+        st.session_state.ranked_preferences[i] = st.selectbox(
             f"Rank {i + 1}:",
             options=available_options,
             index=available_options.index(current_selection) if current_selection in available_options else 0,
             key=f"rank_{i + 1}"
         )
-     
-    # Use cached function to get final rankings
-    final_rankings = get_final_rankings(tuple(new_rankings))
     
+    # Use cached function to compute final rankings
+    final_rankings = compute_final_rankings(st.session_state.ranked_preferences)
+    
+    # Display final rankings
     if final_rankings:
         st.write("\nYour current rankings:")
         for i, rank in enumerate(final_rankings, 1):
             st.write(f"{i}. {rank}")
-    
-    return list(final_rankings)
+
     
 
 def load_env_and_setup():
