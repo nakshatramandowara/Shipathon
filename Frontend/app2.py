@@ -198,7 +198,6 @@ def display_events_as_list(events):
                 should_rerun = True
             elif not attended and is_attended:  # Remove event when unchecked and already attended
                 remove_event_from_past(event)
-                should_rerun = True
         st.markdown("---")
 
     if should_rerun:
