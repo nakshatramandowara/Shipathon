@@ -32,7 +32,7 @@ def setup_mongodb():
         except Exception as e:
             raise SystemExit(f"Error: Failed to connect to MongoDB. Details: {e}")
     
-    @st.cache_resource
+    @st.cache_data
     def get_database_collections(client):
         """Retrieve and cache database collections."""
         db = client['event_app']
