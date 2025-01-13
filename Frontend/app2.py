@@ -194,14 +194,97 @@ def main():
         st.session_state.username = None
     if 'role' not in st.session_state:
         st.session_state.role = None
-    if 'register' not in st.session_state:
-        st.session_state.register = False
-    if 'use_mongo' not in st.session_state:
-        st.session_state.use_mongo = False
 
     # Setup MongoDB and initialize storage
     setup_mongodb()
     init_storage()
+
+    # Sidebar for login/logout functionality
+    with st.sidebar:
+        if not st.session_state.logged_in:
+            st.subheader("Login")
+            login_username = st.text_input("Username", key="login_username")
+            login_password = st.text_input("Password", type="password", key="login_password")
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("Login"):
+                    if verify_user(login_username, login_password):
+                        st.session_state.logged_in = True
+                        st.session_state.username = login_username
+                        user = st.session_state.users_collection.find_one({'username': login_username})
+                        st.session_state.role = user['role']
+                        st.experimental_rerun()
+                    else:
+                        st.error("Invalid credentials")
+            
+            with col2:
+                if st.button("Register"):
+                    st.session_state.register = True
+        else:
+            st.write(f"Welcome, {st.session_state.username}!")
+            if st.button("Logout"):
+                st.session_state.logged_in = False
+                st.session_state.username = None
+                st.session_state.role = None
+                st.experimental_rerun()
+
+    # Registration form
+    if not st.session_state.logged_in and st.session_state.get("register", False):
+        st.subheader("Register New Account")
+        new_username = st.text_input("Choose Username", key="reg_username")
+        new_password = st.text_input("Choose Password", type="password", key="reg_password")
+        
+        roles = ["Student", "Professor", "Organiser"]  
+        gender = ["Male", "Female", "Other"]
+        departments = ["Physics", "Maths", "Electrical", "Computer Science", "Chemical", "Mechanical", "Textile"]
+        categories = ["Technology", "Entertainment", "Sports", "Business", "Cultural"]
+        
+        role = st.selectbox("Choose Role", options=roles)
+        if role == "Student":
+            new_department = st.selectbox("Choose Department", options=departments)
+            new_age = st.number_input("Enter Age", min_value=1, max_value=100, value=20, step=1, key="reg_age")
+            new_year = st.number_input("Enter Degree-Year", min_value=1, max_value=10, value=2, step=1, key="reg_year")
+            new_gender = st.selectbox("Choose Gender", options=gender)
+    
+            ranked_preferences = select_ranked_preferences(categories)
+    
+            if st.button("Create Account"):
+                preferences = ranked_preferences if ranked_preferences else []
+                save_user(
+                    new_username, new_password, role, new_department, 
+                    new_age, new_year, preferences, new_gender, []
+                )
+                st.success("Account created successfully!")
+                st.session_state.register = False
+                st.experimental_rerun()
+
+    # Main content - Recommendations
+    if st.session_state.logged_in:
+        st.subheader("Event Recommendations")
+        
+        with st.expander("Filters"):
+            date_range = st.date_input(
+                "Date Range",
+                value=[datetime.now().date(), datetime(2025, 12, 31).date()],
+                key="date_filter"
+            )
+            
+            event_types = ['All', 'Conference', 'Festival', 'Workshop', 'Competition']
+            selected_type = st.selectbox("Event Type", event_types)
+            
+        filters = {
+            'date_range': [d.isoformat() for d in date_range] if len(date_range) == 2 else None,
+            'event_type': selected_type if selected_type != 'All' else None
+        }
+        
+        user_prefs = get_user_preferences(st.session_state.username)
+        events = st.session_state.events_collection.find()
+        recommended_events = get_recommendations(user_prefs, list(events), filters)
+        display_events_as_list(recommended_events)
+
+if __name__ == "__main__":
+    main()
 
     # Rest of your main function remains the same
     with st.sidebar:
@@ -275,18 +358,5 @@ def main():
                 key="date_filter"
             )
             
-            event_types = ['All', 'Conference', 'Festival', 'Workshop', 'Competition']
-            selected_type = st.selectbox("Event Type", event_types)
-            
-        filters = {
-            'date_range': [d.isoformat() for d in date_range] if len(date_range) == 2 else None,
-            'event_type': selected_type if selected_type != 'All' else None
-        }
-        
-        user_prefs = get_user_preferences(st.session_state.username)
-        events = load_events()
-        recommended_events = get_recommendations(user_prefs, events, filters)
-        display_events_as_list(recommended_events)
-
 if __name__ == "__main__":
     main()
