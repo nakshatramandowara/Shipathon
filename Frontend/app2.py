@@ -1,26 +1,38 @@
+
 import streamlit as st
 import pandas as pd
-import json
 from datetime import datetime
 import hashlib
 from pathlib import Path
+from pymongo import MongoClient
 from backend import event_recommender as er
+import os
+from dotenv import load_dotenv
 
-script_dir = Path(__file__).parent
-EVENTS_PATH = script_dir/"events.json"
+# Load environment variables
+load_dotenv()
+
+# MongoDB connection
+MONGO_URI = os.getenv('MONGODB_URI')
+client = MongoClient(MONGO_URI)
+db = client['event_app']
+users_collection = db['users']
+preferences_collection = db['preferences']
+events_collection = db['events']
+
 @st.cache_data
-
 def start():
     er.ensure_initialization("my_events")
-
-    # with open(EVENTS_PATH, 'r') as f:
-    #     documents = json.load(f)
-
+    
+    # Uncomment this section if you need to initialize events from a file
+    # documents = load_initial_events()
     # for idx, doc in enumerate(documents):
-    #     doc["id"] = idx  
-    #     result = er.add_event_to_database(doc)
-
-start()
+    #     doc["id"] = idx
+    #     events_collection.update_one(
+    #         {"id": idx},
+    #         {"$set": doc},
+    #         upsert=True
+    #     )
 
 # Initialize session state variables
 if 'logged_in' not in st.session_state:
@@ -28,66 +40,58 @@ if 'logged_in' not in st.session_state:
 if 'username' not in st.session_state:
     st.session_state.username = None
 
-# File paths
-USER_DB_PATH = script_dir/"user_db.json"
-USER_PREFS_PATH = script_dir/"user_preferences.json"
-
-# Initialize storage files if they don't exist
-def init_storage():
-    if not USER_DB_PATH.exists():
-        with open(USER_DB_PATH, 'w') as f:
-            json.dump({}, f)
-    
-    if not USER_PREFS_PATH.exists():
-        with open(USER_PREFS_PATH, 'w') as f:
-            json.dump({}, f)
-    
-    if not EVENTS_PATH.exists():
-        sample_events = {}
-        with open(EVENTS_PATH, 'w') as f:
-            json.dump(sample_events, f)
-
-# User authentication functions
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
 def save_user(username, password, role, department, age, year, preferences, gender, past_events):
-    with open(USER_DB_PATH, 'r+') as f:
-        users = json.load(f)
-        users[username] = {
-            'password': hash_password(password),
-            'created_at': datetime.now().isoformat(),
-            'role': role
-        }
-        f.seek(0)
-        json.dump(users, f)
+    # Save user authentication data
+    user_data = {
+        'username': username,
+        'password': hash_password(password),
+        'created_at': datetime.now(),
+        'role': role
+    }
+    users_collection.update_one(
+        {'username': username},
+        {'$set': user_data},
+        upsert=True
+    )
     
-    with open(USER_PREFS_PATH, 'r+') as f:
-        prefs = json.load(f)
-        prefs[username] = {
-            "name": username,
-            "gender": gender,
-            "role": role,
-            "age": age,
-            "department": department,
-            "year": year,
-            "interests": [(len(preferences)-i)*preferences[i] for i in range(len(preferences))],
-            "past_events": past_events
-        }
-        f.seek(0)
-        json.dump(prefs, f)
+    # Save user preferences
+    preferences_data = {
+        "name": username,
+        "gender": gender,
+        "role": role,
+        "age": age,
+        "department": department,
+        "year": year,
+        "interests": [(len(preferences)-i)*preferences[i] for i in range(len(preferences))],
+        "past_events": past_events
+    }
+    preferences_collection.update_one(
+        {'name': username},
+        {'$set': preferences_data},
+        upsert=True
+    )
 
 def verify_user(username, password):
-    with open(USER_DB_PATH, 'r') as f:
-        users = json.load(f)
-        if username in users and users[username]['password'] == hash_password(password):
-            return True
-    return False
+    user = users_collection.find_one({
+        'username': username,
+        'password': hash_password(password)
+    })
+    return user is not None
 
 def get_user_preferences(username):
-    with open(USER_PREFS_PATH, 'r') as f:
-        prefs = json.load(f)
-        return prefs.get(username, {})
+    prefs = preferences_collection.find_one({'name': username})
+    return prefs if prefs else {}
+
+
+# Function to save a new event
+
+
+# Function to delete an event
+
+
 
 def load_events():
     with open(EVENTS_PATH, 'r') as f:
