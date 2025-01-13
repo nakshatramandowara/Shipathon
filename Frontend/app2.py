@@ -14,7 +14,7 @@ script_dir = Path(__file__).parent
 EVENTS_PATH = script_dir / "events.json"
 USER_DB_PATH = script_dir / "user_db.json"
 USER_PREFS_PATH = script_dir / "user_preferences.json"
-reset_collection=False
+reset_collection=True
 
 def setup_mongodb():
     @st.cache_resource
