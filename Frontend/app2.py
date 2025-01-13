@@ -19,29 +19,24 @@ def start():
     er.ensure_initialization("my_events")
 
 def setup_mongodb():
-    """Setup MongoDB connection and store connection status in session state"""
-    if 'mongo_setup_done' not in st.session_state:
-        try:
-            from pymongo import MongoClient
-            MONGO_URI = os.getenv('MONGODB_URI')
-            if MONGO_URI:
-                client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
-                client.server_info()  # Test connection
-                db = client['event_app']
-                
-                # Store collections in session state
-                st.session_state.users_collection = db['users']
-                st.session_state.preferences_collection = db['preferences']
-                st.session_state.events_collection = db['events']
-                st.session_state.use_mongo = True
-                st.session_state.mongo_setup_done = True
-            else:
-                st.session_state.use_mongo = False
-        except Exception as e:
-            st.session_state.use_mongo = False
-            if not st.session_state.get('mongo_error_shown'):
-                st.warning("Failed to connect to MongoDB. Using local JSON storage instead.")
-                st.session_state.mongo_error_shown = True
+    """Setup MongoDB connection and exit if connection fails."""
+    from pymongo import MongoClient
+    MONGO_URI = os.getenv('MONGODB_URI')
+    if not MONGO_URI:
+        raise SystemExit("Error: MongoDB URI not found in environment variables. Exiting.")
+    try:
+        client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+        client.server_info()  # Test connection
+        db = client['event_app']
+
+        # Store collections in session state
+        st.session_state.users_collection = db['users']
+        st.session_state.preferences_collection = db['preferences']
+        st.session_state.events_collection = db['events']
+        st.session_state.use_mongo = True
+        st.session_state.mongo_setup_done = True
+    except Exception as e:
+        raise SystemExit(f"Error: Failed to connect to MongoDB. Details: {e}. Exiting.")
 
 def init_storage():
     """Initialize storage (MongoDB indexes and JSON files)"""
