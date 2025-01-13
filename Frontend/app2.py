@@ -96,7 +96,7 @@ def verify_user(username, password):
     except Exception:
         return False
 
-@cache_data
+
 def get_user_preferences(username):
     try:
         prefs = st.session_state.preferences_collection.find_one({'name': username})
@@ -109,7 +109,7 @@ def load_events():
     with open(EVENTS_PATH, 'r') as f:
         return json.load(f)
         
-@cache_data
+
 def get_recommendations(user_prefs, events, filters=None):
     return er.get_user_preferences(user_prefs)
 
