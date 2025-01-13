@@ -19,30 +19,39 @@ USER_PREFS_PATH = script_dir / "user_preferences.json"
 # def start():
 #     er.ensure_initialization("my_events")
 
+@st.cache_resource
+def setup_mongo_connection():
+    """Setup MongoDB connection. Cached as a shared resource."""
+    MONGO_URI = os.getenv('MONGODB_URI')
+    if not MONGO_URI:
+        raise SystemExit("Error: MongoDB URI not found in environment variables.")
+    try:
+        client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+        client.server_info()  # Test the connection
+        return client
+    except Exception as e:
+        raise SystemExit(f"Error: Failed to connect to MongoDB. Details: {e}")
 
-def setup_mongodb():
-    """Setup MongoDB connection."""
-    @st.cache_resource
-    def foo():
-        MONGO_URI = os.getenv('MONGODB_URI')
-        if not MONGO_URI:
-            raise SystemExit("Error: MongoDB URI not found in environment variables. Exiting.")
-        try:
-            client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
-            client.server_info()  # Test connection
-            
-        except Exception as e:
-            raise SystemExit(f"Error: Failed to connect to MongoDB. Details: {e}. Exiting.")
-    foo()
-    @st.cache_data
-    def foo2():
-        db = client['event_app']
-        # Store collections in session state
-        st.session_state.users_collection = db['users']
-        st.session_state.preferences_collection = db['preferences']
-        st.session_state.events_collection = db['events']
-        st.session_state.mongo_setup_done = True
-    foo2()
+@st.cache_resource
+def get_database_collections(client):
+    """Retrieve and cache database collections."""
+    db = client['event_app']
+    return {
+        'users': db['users'],
+        'preferences': db['preferences'],
+        'events': db['events']
+    }
+
+# Initialize connection and retrieve collections
+client = setup_mongo_connection()
+collections = get_database_collections(client)
+
+# Store collections in session state
+st.session_state.users_collection = collections['users']
+st.session_state.preferences_collection = collections['preferences']
+st.session_state.events_collection = collections['events']
+st.session_state.mongo_setup_done = True
+
     
     
 
