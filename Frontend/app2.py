@@ -209,7 +209,7 @@ def select_ranked_preferences(categories):
             available_options = ["None"] + [
                 category
                 for category in categories
-                if category not in ranked_preferences or category == ranked_preferences[i]
+                if category not in ranked_preferences
             ]
             
             # Create the selectbox
