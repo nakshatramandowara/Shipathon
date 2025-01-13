@@ -11,7 +11,19 @@ from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
+# Initialize session state variables
+if 'logged_in' not in st.session_state:
+    st.session_state.logged_in = False
 
+if 'username' not in st.session_state:
+    st.session_state.username = None
+
+if 'role' not in st.session_state:
+    st.session_state.role = None
+
+if 'register' not in st.session_state:
+    st.session_state.register = False
+    
 script_dir = Path(__file__).parent
 EVENTS_PATH = script_dir/"events.json"
 USER_DB_PATH = script_dir/"user_db.json"
