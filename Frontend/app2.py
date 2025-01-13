@@ -202,14 +202,12 @@ def select_ranked_preferences(categories):
     if "ranked_preferences" not in st.session_state:
         st.session_state.ranked_preferences = [None] * len(categories)
 
-    ranked_preferences = st.session_state.ranked_preferences
-
     for i in range(len(categories)):
         # Dynamically filter the options based on previous selections
         available_options = ["None"] + [
             category
             for category in categories
-            if category not in ranked_preferences or ranked_preferences[i] == category
+            if category not in st.session_state.ranked_preferences or st.session_state.ranked_preferences[i] == category
         ]
 
         # Create the selectbox with persistent state
@@ -220,12 +218,8 @@ def select_ranked_preferences(categories):
         )
 
         # Update session state
-        if ranked_preferences[i] != selected_option:
-            ranked_preferences[i] = selected_option
-
-    return ranked_preferences
-
-
+        if st.session_state.ranked_preferences[i] != selected_option:
+            st.session_state.ranked_preferences[i] = selected_option
 
 
 
@@ -292,12 +286,12 @@ def main():
             new_gender = st.selectbox("Choose Gender", options=gender)
     
             # Call the updated ranked preferences function
-            ranked_preferences = select_ranked_preferences(categories)
+            select_ranked_preferences(categories)
     
             if st.button("Create Account"):
                 save_user(
                     new_username, new_password, role, new_department, 
-                    new_age, new_year, ranked_preferences, new_gender, []
+                    new_age, new_year, st.session_state.ranked_preferences, new_gender, []
                 )
 
 
