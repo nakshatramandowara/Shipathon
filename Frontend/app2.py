@@ -218,8 +218,6 @@ def select_ranked_preferences(categories):
             options=available_options,
             key=f"rank_{i + 1}",
         )
-
-    st.write("Your Rankings:", ranked_preferences)
     return ranked_preferences
 
 
