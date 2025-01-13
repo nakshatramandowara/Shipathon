@@ -62,7 +62,7 @@ def ensure_initialization(name="my_events"):
         print(f"Initialized with {len(points)} events")
             
        
-def get_user_preferences(user_data,
+def get_user_preferences(delete=False,user_data,
     name_weight=0.0,
     gender_weight=0.3,
     role_weight=3.0,
@@ -77,6 +77,11 @@ def get_user_preferences(user_data,
     Ensures collection is initialized before searching.
     """
     # Ensure collection is initialized before searching
+    if(delete)
+        collections = client.get_collections().collections
+        name="my_events"
+        if name in [col.name for col in collections]:
+            client.delete_collections(name)
     ensure_initialization()
     
     # Initialize the combined vector with zeros
