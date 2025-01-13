@@ -61,6 +61,14 @@ def save_user(username, password, role, department, age, year, preferences, gend
     }
     
     try:
+        # Check if the username already exists
+        existing_user = st.session_state.users_collection.find_one({'username': username})
+        
+        if existing_user:
+            st.error("Username already exists. Please choose a different username.")
+            return  # Exit the function if username exists
+
+        # If the username does not exist, proceed with the save operation
         st.session_state.users_collection.update_one(
             {'username': username},
             {'$set': user_data},
@@ -71,8 +79,11 @@ def save_user(username, password, role, department, age, year, preferences, gend
             {'$set': preferences_data},
             upsert=True
         )
+        st.success("User saved successfully!")
+        
     except Exception as e:
         st.error(f"MongoDB Error: {str(e)}")
+
 
 def verify_user(username, password):
     try:
