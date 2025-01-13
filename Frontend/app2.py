@@ -131,16 +131,68 @@ def get_recommendations(user_prefs, events, filters=None):
 
 def display_events_as_list(events):
     st.title("Event List")
-    for event in events:
-        st.markdown(f"### **{event.get('Title', 'Untitled Event')}**")
-        date = event.get("date", "N/A")
-        time = event.get("time", "N/A")
-        st.markdown(f"📅 **Date:** {date}  🕒 **Time:** {time}")
-        location = event.get("location", "N/A")
-        st.markdown(f"📍 **Location:** {location}")
-        summary = event.get("summary", "N/A")
-        st.markdown(f"<p style='font-size: smaller;'>{summary}</p>", unsafe_allow_html=True)
+    username = st.session_state.username
+    user_data = st.session_state.preferences_collection.find_one({"name": username})
+    past_events = user_data.get("past_events", []) if user_data else []
+
+    should_rerun = False  # Track if rerun is needed
+
+    for i, event in enumerate(events):
+        col1, col2 = st.columns([4, 1])  # Two columns: one for the event details, one for the checkbox
+
+        event_title = event.get("Title", "Untitled Event")
+        is_attended = event_title in past_events  # Check if the event is in past_events
+        tags = event.get("Tags", [])  # Get the list of tags
+
+        # Emoji dictionary for tags
+        emoji_map = {
+            "Technology": "💻",
+            "Entertainment": "🎭",
+            "Sports": "⚽",
+            "Business": "📊",
+            "Cultural": "🎨",
+            "Education": "📚",
+        }
+
+        def format_tag(tag):
+            emoji = emoji_map.get(tag, "🏷️")  # Use default emoji if not in the map
+            return f"<span style='display: inline-block; background-color: #f0f0f0; color: #333; padding: 5px 10px; border-radius: 15px; margin: 2px; font-size: 0.9em;'>{emoji} {tag}</span>"
+
+        formatted_tags = "".join([format_tag(tag) for tag in tags])  # Format all tags
+
+        with col1:
+            if is_attended:  # Dim out if attended
+                st.markdown(
+                    f"<div style='opacity: 0.5;'>"
+                    f"<h3>**{event_title}**</h3>"
+                    f"📅 **Date:** {event.get('date', 'N/A')}  🕒 **Time:** {event.get('time', 'N/A')}<br>"
+                    f"📍 **Location:** {event.get('location', 'N/A')}<br>"
+                    f"<p style='font-size: smaller;'>{event.get('summary', 'N/A')}</p>"
+                    f"<div>{formatted_tags}</div>"
+                    f"</div>",
+                    unsafe_allow_html=True,
+                )
+            else:
+                st.markdown(f"### **{event_title}**")
+                st.markdown(f"📅 **Date:** {event.get('date', 'N/A')}  🕒 **Time:** {event.get('time', 'N/A')}")
+                st.markdown(f"📍 **Location:** {event.get('location', 'N/A')}")
+                st.markdown(f"<p style='font-size: smaller;'>{event.get('summary', 'N/A')}</p>", unsafe_allow_html=True)
+                st.markdown(f"<div>{formatted_tags}</div>", unsafe_allow_html=True)
+
+        with col2:
+            attended = st.checkbox("Attended", key=f"attended_{i}", value=is_attended)
+            if attended and not is_attended:  # Add event when checked and not already attended
+                add_event_to_past(event)
+                should_rerun = True
+            elif not attended and is_attended:  # Remove event when unchecked and already attended
+                remove_event_from_past(event)
+                should_rerun = True
+
         st.markdown("---")
+
+    if should_rerun:
+        st.rerun()
+
 
 def select_ranked_preferences(categories):
         
