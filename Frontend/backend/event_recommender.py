@@ -123,22 +123,22 @@ def get_user_preferences(user_data,
 
     return resulting_data
 
-def main():
-    """
-    Main function for testing the recommender system.
-    """
-    ensure_initialization()
+# def main():
+#     """
+#     Main function for testing the recommender system.
+#     """
+#     ensure_initialization()
     
-    user_data_file = script_dir/"user_data.json"
-    try:
-        with open(user_data_file, 'r') as f:
-            user_data = json.load(f)
-        results = get_user_preferences(user_data)
-        print(f"Found {len(results)} recommendations")
-    except FileNotFoundError:
-        print("User data file not found")
-    except json.JSONDecodeError:
-        print("Invalid JSON format in user data file")
+#     user_data_file = script_dir/"user_data.json"
+#     try:
+#         with open(user_data_file, 'r') as f:
+#             user_data = json.load(f)
+#         results = get_user_preferences(user_data)
+#         print(f"Found {len(results)} recommendations")
+#     except FileNotFoundError:
+#         print("User data file not found")
+#     except json.JSONDecodeError:
+#         print("Invalid JSON format in user data file")
 
 if __name__ == '__main__':
     main()
