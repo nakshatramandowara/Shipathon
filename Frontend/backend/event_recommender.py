@@ -42,7 +42,7 @@ def ensure_initialization(name="my_events"):
         for idx, doc in enumerate(documents):
             values_string = f"{doc['Title']} {doc['location']} {doc['summary']} {doc['target_audience']}"
             vector = encoder.encode(values_string).tolist()
-            tags_vector = encoder.encode(' '.join(doc["TAGS"])).tolist()
+            tags_vector = encoder.encode(' '.join(doc["Tags"])).tolist()
             vector = [(a + b*tags_weight) for a,b in zip(vector, tags_vector)]
             
             
