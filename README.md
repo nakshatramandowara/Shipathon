@@ -6,7 +6,7 @@
   - Kahaan Parikh  
   - Nakshtra Mandowara  
   - Harshul Anand  
-  - Shubham Sahu (2023MT11106)  
+  - Shubham Sahu   
 
 ---
 
@@ -42,20 +42,7 @@ The solution incorporates advanced features such as intelligent event recommenda
 ---
 
 ## Tools Used  
-
-### 1. **Gemini LLM API**  
-- Automated structured event detail extraction from email content.  
-- Parsed key details (event date, time, location, audience, summaries) and generated unique event IDs.  
-
-### 2. **Vector Database (Qdrant)**  
-- Stored and managed event embeddings for efficient similarity searches.  
-- Enabled personalized event recommendations by analyzing user preferences and past interactions.  
-
-### 3. **Front-End Development (Streamlit)**  
-- Created an intuitive and interactive user interface.  
-- Allowed dynamic input forms, real-time event data display, and backend integration.
-- 
-### 4. **MongoDB (Database Management)**
+### 1. **MongoDB (Database Management)**
 
 -Integrated MongoDB to handle structured and semi-structured event data effectively.
 
@@ -64,6 +51,20 @@ The solution incorporates advanced features such as intelligent event recommenda
 -Enabled fast querying and aggregation for analytics and personalized recommendations.
 
 -Offered a robust backup and recovery system to ensure data reliability.
+
+### 2. **Gemini LLM API**  
+- Automated structured event detail extraction from email content.  
+- Parsed key details (event date, time, location, audience, summaries) and generated unique event IDs.  
+
+### 3. **Vector Database (Qdrant)**  
+- Stored and managed event embeddings for efficient similarity searches.  
+- Enabled personalized event recommendations by analyzing user preferences and past interactions.  
+
+### 4. **Front-End Development (Streamlit Community Share)**  
+- Created an intuitive and interactive user interface.  
+- Allowed dynamic input forms, real-time event data display, and backend integration.
+
+
 
 
 
