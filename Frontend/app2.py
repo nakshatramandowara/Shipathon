@@ -214,24 +214,24 @@ def main():
     #         st.session_state.register = False
     #         st.rerun()
     # Updated registration form to include ranked preferences
-if not st.session_state.logged_in and st.session_state.get("register", False):
-    st.subheader("Register New Account")
-    new_username = st.text_input("Choose Username", key="reg_username")
-    new_password = st.text_input("Choose Password", type="password", key="reg_password")
+    if not st.session_state.logged_in and st.session_state.get("register", False):
+        st.subheader("Register New Account")
+        new_username = st.text_input("Choose Username", key="reg_username")
+        new_password = st.text_input("Choose Password", type="password", key="reg_password")
+        
+        roles = ["Student", "Professor", "Organiser"]  
+        categories = ["Technology", "Entertainment", "Sports", "Business", "Cultural"]
+        gender = ["Male", "Female", "Other"]
+        departments = ["Physics", "Maths", "Electrical", "Computer Science", "Chemical", "Mechanical", "Textile"]
     
-    roles = ["Student", "Professor", "Organiser"]  
-    categories = ["Technology", "Entertainment", "Sports", "Business", "Cultural"]
-    gender = ["Male", "Female", "Other"]
-    departments = ["Physics", "Maths", "Electrical", "Computer Science", "Chemical", "Mechanical", "Textile"]
-
-    role = st.selectbox("Choose Role", options=roles)
-    if role == "Student":
-        new_department = st.selectbox("Choose Department", options=departments)
-        new_age = st.number_input("Enter Age", min_value=1, max_value=100, value=20, step=1, key="reg_age")
-        new_year = st.number_input("Enter Degree-Year", min_value=1, max_value=10, value=2, step=1, key="reg_year")
-        new_gender = st.selectbox("Choose Gender", options=gender)
-
-        # Use the new ranked preferences function
+        role = st.selectbox("Choose Role", options=roles)
+        if role == "Student":
+            new_department = st.selectbox("Choose Department", options=departments)
+            new_age = st.number_input("Enter Age", min_value=1, max_value=100, value=20, step=1, key="reg_age")
+            new_year = st.number_input("Enter Degree-Year", min_value=1, max_value=10, value=2, step=1, key="reg_year")
+            new_gender = st.selectbox("Choose Gender", options=gender)
+    
+            # Use the new ranked preferences function
         ranked_preferences = select_ranked_preferences(categories)
     
     if st.button("Create Account"):
